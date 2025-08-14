@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ronny Christensen - Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* For a more professional look */
+      @import url('https://rsms.me/inter/inter.css');
+      html { font-family: 'Inter', sans-serif; }
+
+      /* Print-specific styles for a clean, paper-friendly resume */
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          background-color: #fff; /* Ensure white background on print */
+        }
+        
+        .no-print {
+          display: none !important;
+        }
+        
+        .print-container {
+          box-shadow: none !important;
+          margin: 0 !important;
+          max-width: 100% !important;
+          border-radius: 0 !important;
+          padding: 0 !important;
+          border: none !important;
+        }
+        
+        .print-main-content {
+          padding: 0 !important;
+        }
+
+        .print-section {
+          padding-top: 1rem;
+          page-break-inside: avoid;
+        }
+        
+        /* Force single-column layout for printing the two-column view */
+        .print-force-block {
+          display: block !important;
+          width: 100% !important;
+        }
+        
+        .print-bg-transparent {
+          background-color: transparent !important;
+        }
+        
+        .print-text-black {
+          color: #000 !important;
+        }
+
+        .print-text-gray {
+            color: #4A5568 !important; /* A nice gray for sub-text */
+        }
+        
+        .print-border-b {
+          border-bottom-width: 1px !important;
+          border-color: #e2e8f0 !important; /* light gray */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+        }
+
+        /* Show full URLs for web links on print */
+        .print-show-url[href^="http"]:after {
+            content: " (" attr(href) ")";
+            font-size: 0.9em;
+            font-weight: normal;
+            color: #555;
+        }
+
+        /* Don't show URLs for mail/tel links */
+        a[href^="mailto:"]:after, a[href^="tel:"]:after {
+            content: "" !important;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^18.2.0/",
+    "react": "https://esm.sh/react@^18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
+    "react-simple-maps": "https://esm.sh/react-simple-maps@3.0.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-100">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
