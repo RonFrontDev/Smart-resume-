@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { WorkExperience, AppTab, Skill, Reference } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon } from './components/icons';
-import { FileText, Dumbbell, Briefcase, Users } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { en } from './i18n/en';
 import { da } from './i18n/da';
@@ -29,12 +29,12 @@ const ALL_SKILLS: Skill[] = [
     { name: "Boxing Instruction", category: 'fitness' },
     { name: "HIIT", category: 'fitness' },
     { name: "Community Engagement", category: 'fitness' },
-    { name: "Project Management", category: 'professional' },
-    { name: "Full-Stack Development", category: 'professional' },
-    { name: "React & TypeScript", category: 'professional' },
-    { name: "Operational Management", category: 'professional' },
-    { name: "Content Strategy", category: 'professional' },
-    { name: "Client Relations", category: 'professional' },
+    { name: "Project Management", category: 'management' },
+    { name: "Operational Management", category: 'management' },
+    { name: "Content Strategy", category: 'management' },
+    { name: "Client Relations", category: 'management' },
+    { name: "Full-Stack Development", category: 'tech' },
+    { name: "React & TypeScript", category: 'tech' },
 ];
 
 /**
@@ -281,11 +281,20 @@ const App: React.FC = () => {
   // Memoized translation object to avoid re-computation on every render.
   const t = useMemo(() => translations[language], [language]);
 
+  // Determines which category to use for headline/summary text, defaulting to 'full'.
+  const activeCategoryForText = useMemo((): 'full' | 'fitness' | 'tech' | 'management' => {
+    if (activeTab === 'fitness' || activeTab === 'tech' || activeTab === 'management') {
+        return activeTab;
+    }
+    return 'full';
+  }, [activeTab]);
+
   // Memoized navigation items for the NavBar component.
   const navItems = useMemo((): NavItem[] => [
     { name: 'full', title: t.tabs.full, url: '#', icon: FileText },
     { name: 'fitness', title: t.tabs.fitness, url: '#', icon: Dumbbell },
-    { name: 'professional', title: t.tabs.professional, url: '#', icon: Briefcase },
+    { name: 'tech', title: t.tabs.tech, url: '#', icon: Cpu },
+    { name: 'management', title: t.tabs.management, url: '#', icon: Briefcase },
     { name: 'references', title: t.tabs.references, url: '#', icon: Users },
   ], [t]);
 
@@ -300,12 +309,9 @@ const App: React.FC = () => {
   // Memoized list of experiences filtered by the active tab.
   const filteredExperiences = useMemo(() => {
     if (activeTab === 'full') return experiencesInLang;
-    if (activeTab === 'fitness') {
-        return experiencesInLang.filter(exp => exp.category === 'Fitness & Coaching' || exp.category === 'Management & Operations');
-    }
-    if (activeTab === 'professional') {
-        return experiencesInLang.filter(exp => exp.category === 'Software & Tech' || exp.category === 'Management & Operations');
-    }
+    if (activeTab === 'fitness') return experiencesInLang.filter(exp => exp.category === 'Fitness & Coaching');
+    if (activeTab === 'tech') return experiencesInLang.filter(exp => exp.category === 'Software & Tech');
+    if (activeTab === 'management') return experiencesInLang.filter(exp => exp.category === 'Management & Operations');
     return [];
   }, [activeTab, experiencesInLang]);
 
@@ -418,22 +424,23 @@ const App: React.FC = () => {
       <main id="resume-container" ref={resumeContainerRef} className="max-w-4xl mx-auto pt-16 pb-28 sm:pt-24 sm:pb-8 px-4 sm:px-6 lg:px-8">
         <header className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">{t.name}</h1>
-            <h2 className="text-lg md:text-xl font-medium text-teal-600 mt-2">{t.headline}</h2>
+            <h2 className="text-lg md:text-xl font-medium text-teal-600 mt-2">{t.headline[activeCategoryForText]}</h2>
         </header>
 
         {/* The main content body with collapsible sections */}
         <div className="animate-fade-in-up">
-            <CollapsibleSection title={t.sections.summary} sectionId="summary" isCollapsed={!!collapsedSections['summary']} onToggle={handleToggleCollapse}>
-                <p className="max-w-3xl text-gray-600">{t.summary}</p>
-            </CollapsibleSection>
-
             {/* A key is used here to re-trigger animations when the active tab changes */}
             <div key={activeTab} className="animate-fade-in">
                 {activeTab !== 'references' ? (
                     <>
+                        {/* Summary Section */}
+                        <CollapsibleSection title={t.sections.summary} sectionId="summary" isCollapsed={!!collapsedSections['summary']} onToggle={handleToggleCollapse}>
+                            <p className="max-w-3xl text-gray-600">{t.summary[activeCategoryForText]}</p>
+                        </CollapsibleSection>
+
                         {/* Skills Section */}
                         <CollapsibleSection title={t.sections.skills} sectionId="skills" isCollapsed={!!collapsedSections['skills']} onToggle={handleToggleCollapse}>
-                            {activeTab !== 'full' && <CoverLetter text={t.coverLetters[activeTab]} />}
+                            {(activeTab === 'fitness' || activeTab === 'tech' || activeTab === 'management') && <CoverLetter text={t.coverLetters[activeTab]} />}
                             <SkillsSection skills={displayedSkills} title={activeTab === 'full' ? t.sections.skills : ''} />
                         </CollapsibleSection>
 

@@ -1,5 +1,5 @@
 export type WorkCategory = 'Fitness & Coaching' | 'Management & Operations' | 'Software & Tech';
-export type AppTab = 'full' | 'fitness' | 'professional' | 'references';
+export type AppTab = 'full' | 'fitness' | 'tech' | 'management' | 'references';
 
 export interface WorkExperience {
   id: string;
@@ -16,7 +16,7 @@ export interface WorkExperience {
 
 export interface Skill {
     name: string;
-    category: 'fitness' | 'professional' | 'both';
+    category: 'fitness' | 'tech' | 'management' | 'both';
 }
 
 export interface Reference {

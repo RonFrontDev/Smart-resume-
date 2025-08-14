@@ -1,10 +1,20 @@
 export const da = {
   name: "Ronny Christensen",
-  headline: "Alsidig professionel med ekspertise i fitness, ledelse & tech",
-  summary: "En yderst motiveret og resultatorienteret professionel med over 15 års mangesidet erfaring, der spænder over fitnessbranchen, projektledelse og softwareudvikling. Dokumenteret evne til at lede og inspirere, kombineret med en stærk baggrund i driftsledelse og opbygning af digitale produkter.",
+  headline: {
+    full: "Alsidig professionel med ekspertise i fitness, ledelse & tech",
+    fitness: "Dedikeret Fitness Coach & CrossFit Level 2 Træner",
+    tech: "Full-Stack Udvikler & Skaber af Digitale Produkter",
+    management: "Strategisk Projekt- & Driftsleder"
+  },
+  summary: {
+      full: "En yderst motiveret og resultatorienteret professionel med over 15 års mangesidet erfaring, der spænder over fitnessbranchen, projektledelse og softwareudvikling. Dokumenteret evne til at lede og inspirere, kombineret med en stærk baggrund i driftsledelse og opbygning af digitale produkter.",
+      fitness: "En passioneret og certificeret fitness-professionel med over et årtis erfaring i at skabe dynamiske, resultatorienterede træningsmiljøer. Specialiseret i CrossFit, styrketræning og fællesskabsopbygning for at hjælpe medlemmer med at nå deres mål og fremme en blomstrende fitnesskultur.",
+      tech: "En dygtig softwareudvikler med praktisk erfaring i hele udviklingscyklussen. Kyndig i moderne webteknologier med fokus på at bygge brugervenlige grænseflader og robuste backend-funktionaliteter. Erfaren i at styre freelanceprojekter fra koncept til implementering, hvilket demonstrerer stærke full-stack-kapaciteter.",
+      management: "En alsidig og strategisk leder med en dokumenteret track record inden for projekt- og driftsledelse. Erfaren i at styre alle forretningsaspekter, herunder økonomisk tilsyn, personaleuddannelse og strategisk planlægning. Dygtig til at lede teams og udføre projekter af høj værdi i tempofyldte miljøer for at drive rentabilitet og vækst."
+  },
   contact: { title: "Kontaktinformation", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
   online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
-  tabs: { full: "CV", fitness: "Fitness", professional: "Arbejde", references: "Referencer" },
+  tabs: { full: "CV", fitness: "Fitness", tech: "Tech", management: "Ledelse", references: "Referencer" },
   tooltips: { 
       viewContact: "Vis Kontaktinformation",
       collapseAll: "Fold alle sektioner sammen",
@@ -13,7 +23,8 @@ export const da = {
   },
   coverLetters: {
       fitness: "Som en passioneret og certificeret fitness-professionel med over et årtis erfaring specialiserer jeg mig i at skabe dynamiske, resultatorienterede træningsmiljøer. Min ekspertise inden for CrossFit, styrketræning og opbygning af fællesskaber har konsekvent ført til øget medlemsfastholdelse og engagement. Jeg er ivrig efter at bringe min dedikation og coachingfærdigheder til et team, der værdsætter præstation, sikkerhed og en blomstrende fitnesskultur.",
-      professional: "En alsidig og strategisk professionel med en unik blanding af erfaring inden for projektledelse, softwareudvikling og kunderelationer. Jeg har en dokumenteret track record med at lede projekter fra koncept til færdiggørelse, bygge robuste digitale løsninger og styre operationel logistik. Jeg er dygtig til problemløsning i tempofyldte miljøer og søger at anvende mine forskelligartede tekniske og ledelsesmæssige færdigheder til at skabe betydningsfulde resultater."
+      tech: "Med et stærkt fundament i full-stack udvikling og en passion for at skabe intuitive digitale løsninger, tilbyder jeg en unik blanding af tekniske færdigheder og projektledelseserfaring. Jeg er dygtig til moderne teknologier som React og TypeScript og har med succes leveret projekter fra koncept til implementering. Jeg glæder mig til at bidrage med mine problemløsningsevner og udviklingsekspertise til et fremadskuende tech-team.",
+      management: "Som en strategisk leder med omfattende erfaring inden for operationel ledelse og projektgennemførelse, udmærker jeg mig ved at styre organisationer mod rentabilitet og vækst. Min baggrund omfatter rekruttering og mentoring af teams, budgetstyring og implementering af marketingstrategier, der markant øger rækkevidde og leadgenerering. Jeg er ivrig efter at anvende mine lederevner til at drive betydningsfulde resultater i en udfordrende lederstilling."
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   references: {

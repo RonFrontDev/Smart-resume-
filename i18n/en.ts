@@ -1,10 +1,20 @@
 export const en = {
   name: "Ronny Christensen",
-  headline: "Versatile Professional with expertise in Fitness, Management & Tech",
-  summary: "A highly motivated and results-oriented professional with over 15 years of multifaceted experience spanning the fitness industry, project management, and software development. Proven ability to lead and inspire, combined with a strong background in managing operations and building digital products.",
+  headline: {
+      full: "Versatile Professional with expertise in Fitness, Management & Tech",
+      fitness: "Dedicated Fitness Coach & CrossFit Level 2 Trainer",
+      tech: "Full-Stack Developer & Digital Product Creator",
+      management: "Strategic Project & Operations Manager"
+  },
+  summary: {
+      full: "A highly motivated and results-oriented professional with over 15 years of multifaceted experience spanning the fitness industry, project management, and software development. Proven ability to lead and inspire, combined with a strong background in managing operations and building digital products.",
+      fitness: "A passionate and certified fitness professional with over a decade of experience in creating dynamic, results-driven training environments. Specializing in CrossFit, strength conditioning, and community building to help members achieve their goals and foster a thriving fitness culture.",
+      tech: "A skilled software developer with hands-on experience in the full development lifecycle. Proficient in modern web technologies, with a focus on building user-friendly interfaces and robust backend functionalities. Experienced in managing freelance projects from concept to deployment, demonstrating strong full-stack capabilities.",
+      management: "A versatile and strategic leader with a proven track record in project and operations management. Experienced in directing all business aspects, including financial oversight, staff training, and strategic planning. Adept at leading teams and executing high-value projects in fast-paced environments to drive profitability and growth."
+  },
   contact: { title: "Contact Information", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
   online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
-  tabs: { full: "Résumé", fitness: "Fitness", professional: "Work", references: "References" },
+  tabs: { full: "Full Resume", fitness: "Fitness", tech: "Tech", management: "Management", references: "References" },
   tooltips: { 
       viewContact: "View Contact Information",
       collapseAll: "Collapse All Sections",
@@ -13,7 +23,8 @@ export const en = {
   },
   coverLetters: {
       fitness: "As a passionate and certified fitness professional with over a decade of experience, I specialize in creating dynamic, results-driven training environments. My expertise in CrossFit, strength conditioning, and community building has consistently led to increased member retention and engagement. I am eager to bring my dedication and coaching skills to a team that values performance, safety, and a thriving fitness culture.",
-      professional: "A versatile and strategic professional with a unique blend of experience in project management, software development, and client relations. I have a proven track record of leading projects from concept to completion, building robust digital solutions, and managing operational logistics. I am adept at problem-solving in fast-paced environments and am seeking to apply my diverse technical and managerial skills to drive impactful results."
+      tech: "With a strong foundation in full-stack development and a passion for creating intuitive digital solutions, I offer a unique blend of technical skill and project management experience. I am proficient in modern technologies like React and TypeScript and have successfully delivered projects from concept to deployment. I am excited to contribute my problem-solving abilities and development expertise to a forward-thinking tech team.",
+      management: "As a strategic manager with extensive experience in operational leadership and project execution, I excel at steering organizations toward profitability and growth. My background includes recruiting and mentoring teams, managing budgets, and implementing marketing strategies that significantly boost reach and lead generation. I am eager to apply my leadership skills to drive impactful results in a challenging management role."
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   references: {
