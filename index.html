@@ -15,11 +15,18 @@
         body {
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
-          background-color: #fff; /* Ensure white background on print */
+          background-color: #fff !important; /* Ensure white background on print */
         }
         
         .no-print {
           display: none !important;
+        }
+
+        .print-force-visible {
+            opacity: 1 !important;
+            width: auto !important;
+            max-width: initial !important;
+            overflow: visible !important;
         }
         
         .print-container {
@@ -40,12 +47,6 @@
           page-break-inside: avoid;
         }
         
-        /* Force single-column layout for printing the two-column view */
-        .print-force-block {
-          display: block !important;
-          width: 100% !important;
-        }
-        
         .print-bg-transparent {
           background-color: transparent !important;
         }
@@ -58,13 +59,13 @@
             color: #4A5568 !important; /* A nice gray for sub-text */
         }
         
-        .print-border-b {
-          border-bottom-width: 1px !important;
-          border-color: #e2e8f0 !important; /* light gray */
+        /* Ensure collapsible sections are expanded on print */
+        .print-expand .collapsible-content {
+            max-height: none !important;
+            overflow: visible !important;
         }
-
-        h1, h2, h3, h4, h5, h6 {
-            page-break-after: avoid;
+        .print-expand .collapsible-icon {
+            display: none !important;
         }
 
         /* Show full URLs for web links on print */
@@ -87,7 +88,8 @@
     "react/": "https://esm.sh/react@^18.2.0/",
     "react": "https://esm.sh/react@^18.2.0",
     "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
-    "react-simple-maps": "https://esm.sh/react-simple-maps@3.0.0"
+    "react-simple-maps": "https://esm.sh/react-simple-maps@3.0.0",
+    "html2pdf.js": "https://esm.sh/html2pdf.js@0.10.1"
   }
 }
 </script>
