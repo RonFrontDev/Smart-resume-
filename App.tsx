@@ -1,6 +1,9 @@
+
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { WorkExperience, AppTab, Skill, Reference } from './types';
-import { MailIcon, PhoneIcon, LinkedInIcon, LockClosedIcon, LockOpenIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, MenuIcon, XIcon } from './components/icons';
+import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, MenuIcon, XIcon } from './components/icons';
+import { ExpandableTabs } from './components/ui/expandable-tabs';
+import { Home, Briefcase, Code, Users } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 
 // --- DATA & TRANSLATIONS ---
@@ -38,11 +41,11 @@ const translations = {
     name: "Ronny Christensen",
     headline: "Versatile Professional with expertise in Fitness, Management & Tech",
     summary: "A highly motivated and results-oriented professional with over 15 years of multifaceted experience spanning the fitness industry, project management, and software development. Proven ability to lead and inspire, combined with a strong background in managing operations and building digital products.",
-    contact: { phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
+    contact: { title: "Contact Information", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
     online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
     tabs: { full: "Full Résumé", fitness: "Fitness", professional: "Other Professional Work", references: "References" },
     tooltips: { 
-        toggleContact: "Show / Hide Contact Information",
+        viewContact: "View Contact Information",
         collapseAll: "Collapse All Sections",
         unfoldAll: "Unfold All Sections",
         download: "Download as PDF"
@@ -76,11 +79,11 @@ const translations = {
     name: "Ronny Christensen",
     headline: "Alsidig professionel med ekspertise i fitness, ledelse & tech",
     summary: "En yderst motiveret og resultatorienteret professionel med over 15 års mangesidet erfaring, der spænder over fitnessbranchen, projektledelse og softwareudvikling. Dokumenteret evne til at lede og inspirere, kombineret med en stærk baggrund i driftsledelse og opbygning af digitale produkter.",
-    contact: { phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
+    contact: { title: "Kontaktinformation", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
     online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
     tabs: { full: "Fuldt CV", fitness: "Fitness", professional: "Andet Professionelt Arbejde", references: "Referencer" },
     tooltips: { 
-        toggleContact: "Vis / Skjul Kontaktinformation",
+        viewContact: "Vis Kontaktinformation",
         collapseAll: "Fold alle sektioner sammen",
         unfoldAll: "Fold alle sektioner ud",
         download: "Download som PDF"
@@ -114,11 +117,11 @@ const translations = {
     name: "Ronny Christensen",
     headline: "Mångsidig professionell med expertis inom fitness, ledarskap & teknik",
     summary: "En högmotiverad och resultatinriktad professionell med över 15 års mångfacetterad erfarenhet som sträcker sig över fitnessindustrin, projektledning och mjukvaruutveckling. Bevisad förmåga att leda och inspirera, kombinerat med en stark bakgrund inom driftledning och att bygga digitala produkter.",
-    contact: { phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
+    contact: { title: "Kontaktinformation", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
     online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
     tabs: { full: "Fullständigt CV", fitness: "Fitness", professional: "Övrigt Professionellt Arbete", references: "Referenser" },
     tooltips: { 
-        toggleContact: "Visa / Dölj Kontaktinformation",
+        viewContact: "Visa Kontaktinformation",
         collapseAll: "Fäll ihop alla sektioner",
         unfoldAll: "Fäll ut alla sektioner",
         download: "Ladda ner som PDF"
@@ -259,6 +262,59 @@ const CollapsibleSection: React.FC<{
     </div>
 );
 
+// --- CONTACT MODAL COMPONENT ---
+const ContactModal: React.FC<{ t: (typeof translations)['en']; onClose: () => void; }> = ({ t, onClose }) => {
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
+
+    return (
+        <div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm animate-fade-in no-print"
+            aria-labelledby="contact-modal-title"
+            role="dialog"
+            aria-modal="true"
+            onClick={onClose}
+        >
+            <div 
+                className="relative bg-white rounded-2xl shadow-2xl p-8 m-4 max-w-md w-full animate-fade-in-up"
+                onClick={e => e.stopPropagation()}
+            >
+                <button 
+                    onClick={onClose} 
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Close"
+                >
+                    <XIcon className="h-6 w-6" />
+                </button>
+                <h2 id="contact-modal-title" className="text-2xl font-bold text-gray-800 mb-6 text-center">{t.contact.title}</h2>
+                <div className="space-y-4 text-lg">
+                    <a href={`tel:${t.contact.phone}`} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <PhoneIcon className="h-6 w-6 text-teal-600 flex-shrink-0" /> 
+                        <span className="text-gray-700">{t.contact.phone}</span>
+                    </a>
+                    <a href={`mailto:${t.contact.email}`} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <MailIcon className="h-6 w-6 text-teal-600 flex-shrink-0" />
+                        <span className="text-gray-700">{t.contact.email}</span>
+                    </a>
+                    <a href={`https://${t.online.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors print-show-url">
+                        <LinkedInIcon className="h-6 w-6 text-teal-600 flex-shrink-0" />
+                        <span className="text-gray-700">{t.online.linkedinText}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- HEADER / NAVBAR COMPONENT ---
 const Header: React.FC<{
   t: (typeof translations)['en'];
@@ -267,52 +323,72 @@ const Header: React.FC<{
   activeTab: AppTab;
   setActiveTab: (tab: AppTab) => void;
   scrolled: boolean;
-}> = ({ t, language, setLanguage, activeTab, setActiveTab, scrolled }) => {
+  onContactClick: () => void;
+  onToggleAll: () => void;
+  areAllCollapsed: boolean;
+  onDownload: () => void;
+  isDownloading: boolean;
+}> = ({ t, language, setLanguage, activeTab, setActiveTab, scrolled, onContactClick, onToggleAll, areAllCollapsed, onDownload, isDownloading }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
-        // Prevent body scroll when mobile menu is open
         document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
     }, [isMenuOpen]);
 
     const handleNavClick = (tab: AppTab) => {
         setActiveTab(tab);
-        setIsMenuOpen(false); // Close menu on navigation
+        setIsMenuOpen(false);
     };
+
+    const TABS_CONFIG = useMemo(() => [
+        { title: t.tabs.full, icon: Home, key: 'full' },
+        { title: t.tabs.fitness, icon: Briefcase, key: 'fitness' },
+        { title: t.tabs.professional, icon: Code, key: 'professional' },
+        { title: t.tabs.references, icon: Users, key: 'references' },
+    ], [t]);
+
+    const handleTabSelect = (index: number) => {
+        const newTabKey = TABS_CONFIG[index].key;
+        setActiveTab(newTabKey as AppTab);
+    };
+
+    const selectedIndex = useMemo(() => TABS_CONFIG.findIndex(tab => tab.key === activeTab), [TABS_CONFIG, activeTab]);
+
 
     return (
         <>
             <header className={`fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm transition-all duration-300 no-print ${scrolled ? 'border-b border-gray-200/80 shadow-sm' : 'border-b border-transparent'}`}>
                 <nav className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
-                        {/* Logo / Name */}
                         <div className="flex-shrink-0">
                             <span className="text-xl font-bold text-gray-800">{t.name}</span>
                         </div>
 
-                        {/* Desktop Navigation */}
-                        <div className="hidden md:flex md:items-center md:space-x-4">
-                            {(Object.keys(t.tabs) as AppTab[]).map(tabKey => (
-                                <button
-                                    key={tabKey}
-                                    onClick={() => handleNavClick(tabKey)}
-                                    className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal-500 ${activeTab === tabKey ? 'text-teal-600 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
-                                    aria-current={activeTab === tabKey ? 'page' : undefined}
-                                >
-                                    {t.tabs[tabKey]}
-                                    {activeTab === tabKey && (
-                                        <span className="absolute -bottom-px left-0 w-full h-0.5 bg-teal-500"></span>
-                                    )}
-                                </button>
-                            ))}
+                        <div className="hidden md:flex md:items-center">
+                            <ExpandableTabs
+                                tabs={TABS_CONFIG.map(({ title, icon }) => ({ title, icon }))}
+                                selectedIndex={selectedIndex}
+                                onSelect={handleTabSelect}
+                                activeColor="text-teal-600"
+                            />
                         </div>
 
-                        {/* Desktop Controls */}
-                        <div className="hidden md:flex items-center space-x-2">
-                             <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
+                        <div className="hidden md:flex items-center space-x-3">
+                             <div className="flex items-center space-x-1">
+                                <ControlButton onClick={onContactClick} title={t.tooltips.viewContact}>
+                                    <MailIcon className="h-5 w-5" />
+                                </ControlButton>
+                                <ControlButton onClick={onToggleAll} title={areAllCollapsed ? t.tooltips.unfoldAll : t.tooltips.collapseAll}>
+                                    {areAllCollapsed ? <ChevronDoubleDownIcon className="h-5 w-5" /> : <ChevronDoubleUpIcon className="h-5 w-5" />}
+                                </ControlButton>
+                                <ControlButton onClick={onDownload} title={t.tooltips.download} disabled={isDownloading}>
+                                    <DownloadIcon className={`h-5 w-5 ${isDownloading ? 'animate-pulse' : ''}`} />
+                                </ControlButton>
+                            </div>
+                            <div className="w-px h-6 bg-gray-200/80" />
+                            <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
                         </div>
                         
-                        {/* Mobile Menu Button */}
                         <div className="md:hidden flex items-center">
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -327,14 +403,13 @@ const Header: React.FC<{
                 </nav>
             </header>
 
-            {/* Mobile Menu Panel */}
             <div className={`fixed inset-0 z-40 bg-white/95 backdrop-blur-lg transition-transform duration-300 ease-in-out md:hidden no-print ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
                 <div className="pt-20 px-4 flex flex-col items-center space-y-6">
                      {(Object.keys(t.tabs) as AppTab[]).map(tabKey => (
                         <button
                             key={tabKey}
                             onClick={() => handleNavClick(tabKey)}
-                            className={`block w-full text-center py-3 rounded-md text-lg font-medium transition-colors duration-200 ${activeTab === tabKey ? 'text-teal-600 bg-gray-100' : 'text-gray-600 hover:text-gray-900'}`}
+                            className={`block w-full text-center py-3 rounded-md text-lg font-medium transition-colors duration-200 ${activeTab === tabKey ? 'text-teal-600 bg-gray-100' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100'}`}
                             aria-current={activeTab === tabKey ? 'page' : undefined}
                         >
                             {t.tabs[tabKey]}
@@ -342,6 +417,17 @@ const Header: React.FC<{
                     ))}
                     <div className="border-t border-gray-200 w-full my-4"></div>
                     <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} className="w-full justify-center p-1" />
+                    <div className="flex items-center justify-center space-x-4">
+                        <ControlButton onClick={onContactClick} title={t.tooltips.viewContact}>
+                            <MailIcon className="h-6 w-6" />
+                        </ControlButton>
+                        <ControlButton onClick={onToggleAll} title={areAllCollapsed ? t.tooltips.unfoldAll : t.tooltips.collapseAll}>
+                            {areAllCollapsed ? <ChevronDoubleDownIcon className="h-6 w-6" /> : <ChevronDoubleUpIcon className="h-6 w-6" />}
+                        </ControlButton>
+                        <ControlButton onClick={onDownload} title={t.tooltips.download} disabled={isDownloading}>
+                            <DownloadIcon className={`h-6 w-6 ${isDownloading ? 'animate-pulse' : ''}`} />
+                        </ControlButton>
+                    </div>
                 </div>
             </div>
         </>
@@ -353,13 +439,12 @@ const Header: React.FC<{
 const App: React.FC = () => {
   const [language, setLanguage] = useState<keyof typeof translations>('en');
   const [activeTab, setActiveTab] = useState<AppTab>('full');
-  const [isContactLocked, setIsContactLocked] = useState(true);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({});
   const [isDownloading, setIsDownloading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const resumeContainerRef = useRef<HTMLDivElement>(null);
 
-  // Effect to detect scrolling for header shadow
   useEffect(() => {
     const handleScroll = () => {
         setScrolled(window.scrollY > 10);
@@ -462,41 +547,21 @@ const App: React.FC = () => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         scrolled={scrolled}
+        onContactClick={() => setIsContactModalOpen(true)}
+        onToggleAll={handleToggleAll}
+        areAllCollapsed={areAllCurrentlyCollapsed}
+        onDownload={handleDownloadPdf}
+        isDownloading={isDownloading}
       />
+
+      {isContactModalOpen && <ContactModal t={t} onClose={() => setIsContactModalOpen(false)} />}
       
       <main id="resume-container" ref={resumeContainerRef} className="max-w-4xl mx-auto pt-24 px-4 sm:px-6 lg:px-8">
-        {/* --- Main Header Text --- */}
         <header className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">{t.name}</h1>
             <h2 className="text-lg md:text-xl font-medium text-teal-600 mt-2">{t.headline}</h2>
-            
-             {/* Contact Information Section with lock toggle */}
-            <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-2 text-gray-500 mt-6 text-sm">
-                <div className={`flex flex-wrap justify-center items-center gap-x-6 gap-y-2 transition-all duration-500 ease-in-out print-force-visible ${isContactLocked ? 'opacity-0 w-0 max-w-0 overflow-hidden' : 'opacity-100 w-auto max-w-lg'}`}>
-                    <a href={`tel:${t.contact.phone}`} className="flex items-center gap-2 hover:text-teal-600 whitespace-nowrap"><PhoneIcon className="h-4 w-4" /> {t.contact.phone}</a>
-                    <a href={`mailto:${t.contact.email}`} className="flex items-center gap-2 hover:text-teal-600 whitespace-nowrap"><MailIcon className="h-4 w-4" /> {t.contact.email}</a>
-                    <a href={`https://${t.online.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-teal-600 print-show-url"><LinkedInIcon className="h-4 w-4" /> {t.online.linkedinText}</a>
-                </div>
-                
-                <button onClick={() => setIsContactLocked(!isContactLocked)} className="p-2 rounded-full text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors duration-300 no-print" aria-label={t.tooltips.toggleContact} title={t.tooltips.toggleContact}>
-                    {isContactLocked ? <LockClosedIcon className="h-5 w-5" /> : <LockOpenIcon className="h-5 w-5" />}
-                </button>
-            </div>
         </header>
-        
-        {/* --- Content Controls --- */}
-        <div className="flex justify-end items-center gap-2 mb-6 no-print">
-            <div className="flex items-center bg-gray-200/80 rounded-full p-0.5 shrink-0">
-                <ControlButton onClick={handleToggleAll} title={areAllCurrentlyCollapsed ? t.tooltips.unfoldAll : t.tooltips.collapseAll}>
-                    {areAllCurrentlyCollapsed ? <ChevronDoubleDownIcon className="h-5 w-5" /> : <ChevronDoubleUpIcon className="h-5 w-5" />}
-                </ControlButton>
-                <ControlButton onClick={handleDownloadPdf} title={t.tooltips.download} disabled={isDownloading}>
-                    <DownloadIcon className={`h-5 w-5 ${isDownloading ? 'animate-pulse' : ''}`} />
-                </ControlButton>
-            </div>
-        </div>
 
-        {/* --- Main Content Area --- */}
         <div className="animate-fade-in-up">
             <CollapsibleSection title={t.sections.summary} sectionId="summary" isCollapsed={!!collapsedSections['summary']} onToggle={handleToggleCollapse}>
                 <p className="max-w-3xl text-gray-600">{t.summary}</p>
@@ -526,7 +591,7 @@ const App: React.FC = () => {
                                 <div key={index} className="p-4 bg-gray-100/80 rounded-lg">
                                     <p className="font-bold text-gray-800">{ref.name}</p>
                                     <p className="text-gray-600">{ref.role}</p>
-                                    <p className={`text-sm text-gray-500 mt-2 transition-opacity duration-300 print-force-visible ${isContactLocked ? 'opacity-0' : 'opacity-100'}`}>
+                                    <p className="text-sm text-gray-500 mt-2 print-force-visible">
                                         {ref.contact}
                                     </p>
                                 </div>
