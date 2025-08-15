@@ -1,5 +1,12 @@
-export type WorkCategory = 'Fitness & Coaching' | 'Management & Operations' | 'Software & Tech';
-export type AppTab = 'full' | 'fitness' | 'tech' | 'management' | 'references';
+export type WorkCategory =
+  | 'Fitness Coaching'
+  | 'Fitness Management'
+  | 'Hospitality & Service'
+  | 'Project Management'
+  | 'Software Development'
+  | 'Content Creation';
+  
+export type AppTab = 'full' | 'fitness' | 'tech' | 'management' | 'content-creation' | 'references';
 
 export interface WorkExperience {
   id: string;
@@ -7,7 +14,7 @@ export interface WorkExperience {
   company: string;
   duration: string;
   location: string;
-  category: WorkCategory;
+  category: WorkCategory[];
   achievements: {
       fitness: string[];
       professional: string[];
@@ -16,7 +23,7 @@ export interface WorkExperience {
 
 export interface Skill {
     name: string;
-    category: 'fitness' | 'tech' | 'management' | 'both';
+    category: 'fitness' | 'tech' | 'management' | 'content-creation' | 'both';
 }
 
 export interface Reference {

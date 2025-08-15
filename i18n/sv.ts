@@ -5,33 +5,31 @@ export const sv = {
     fitness: "Fitness & Coaching CV",
     tech: "Mjukvara & Teknik CV",
     management: "Ledarskap & Drift CV",
+    "content-creation": "Innehållsskapande & Sociala Medier CV",
     references: "Professionella Referenser"
   },
   headline: {
     full: "Mångsidig professionell med expertis inom fitness, ledarskap & teknik",
     fitness: "Engagerad Fitness Coach & CrossFit Level 2 Tränare",
     tech: "Full-Stack Utvecklare & Skapare av Digitala Produkter",
-    management: "Strategisk Projekt- & Driftledare"
+    management: "Strategisk Projekt- & Driftledare",
+    "content-creation": "Kreativ Innehållsstrateg & Sociala Medier Expert"
   },
   summary: {
     full: "En högmotiverad och resultatinriktad professionell med över 15 års mångfacetterad erfarenhet som sträcker sig över fitnessindustrin, projektledning och mjukvaruutveckling. Bevisad förmåga att leda och inspirera, kombinerat med en stark bakgrund inom driftledning och att bygga digitala produkter.",
     fitness: "En passionerad och certifierad fitnessprofessionell med över ett decenniums erfarenhet av att skapa dynamiska, resultatdrivna träningsmiljöer. Specialiserad på CrossFit, styrketräning och att bygga gemenskap för att hjälpa medlemmar att nå sina mål och främja en blomstrande gymkultur.",
     tech: "En skicklig mjukvaruutvecklare med praktisk erfarenhet av hela utvecklingslivscykeln. Kunnig i moderna webbteknologier med fokus på att bygga användarvänliga gränssnitt och robusta backend-funktioner. Erfaren av att hantera frilansprojekt från koncept till driftsättning, vilket visar på starka full-stack-förmågor.",
-    management: "En mångsidig och strategisk ledare med en bevisad meritlista inom projekt- och driftledning. Erfaren av att styra alla affärsaspekter, inklusive ekonomisk tillsyn, personalutbildning och strategisk planering. Skicklig på att leda team och genomföra högvärdiga projekt i snabbrörliga miljöer för att driva lönsamhet och tillväxt."
+    management: "En mångsidig och strategisk ledare med en bevisad meritlista inom projekt- och driftledning. Erfaren av att styra alla affärsaspekter, inklusive ekonomisk tillsyn, personalutbildning och strategisk planering. Skicklig på att leda team och genomföra högvärdiga projekt i snabbrörliga miljöer för att driva lönsamhet och tillväxt.",
+    "content-creation": "En kreativ och strategisk innehållsskapare med erfarenhet av att utveckla engagerande kampanjer på sociala medier. Kunnig inom videoproduktion, copywriting och innehållsstrategi för att bygga varumärkeskännedom och främja gemenskapsengagemang."
   },
   contact: { title: "Kontaktinformation", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
   online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
-  tabs: { full: "CV", fitness: "Fitness", tech: "Teknik", management: "Ledning", references: "Referenser" },
+  tabs: { full: "CV", fitness: "Fitness", tech: "Teknik", management: "Ledning", contentCreation: "Innehåll", references: "Referenser" },
   tooltips: { 
       viewContact: "Visa Kontaktinformation",
       collapseAll: "Fäll ihop alla sektioner",
       unfoldAll: "Fäll ut alla sektioner",
       download: "Ladda ner som PDF"
-  },
-  coverLetters: {
-      fitness: "Som en passionerad och certifierad fitnessprofessionell med över ett decenniums erfarenhet, specialiserar jag mig på att skapa dynamiska, resultatdrivna träningsmiljöer. Min expertis inom CrossFit, styrketräning och community-byggande har konsekvent lett till ökad medlemsretention och engagemang. Jag är ivrig att bidra med mitt engagemang och mina coachingfärdigheter till ett team som värdesätter prestation, säkerhet och en blomstrande fitnesskultur.",
-      tech: "Med en stark grund i full-stack-utveckling och en passion för att skapa intuitiva digitala lösningar, erbjuder jag en unik blandning av teknisk skicklighet och projektledningserfarenhet. Jag är kunnig i moderna teknologier som React och TypeScript och har framgångsrikt levererat projekt från koncept till driftsättning. Jag ser fram emot att bidra med min problemlösningsförmåga och utvecklingsexpertis till ett framåtblickande tech-team.",
-      management: "Som en strategisk ledare med omfattande erfarenhet inom operativt ledarskap och projektgenomförande, utmärker jag mig i att styra organisationer mot lönsamhet och tillväxt. Min bakgrund inkluderar rekrytering och mentorskap av team, budgethantering och implementering av marknadsföringsstrategier som avsevärt ökar räckvidd och leadgenerering. Jag är angelägen om att tillämpa mina ledaregenskaper för att driva betydande resultat i en utmanande ledarroll."
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
   references: {
