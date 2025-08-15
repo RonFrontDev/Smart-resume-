@@ -1,5 +1,12 @@
 export const sv = {
   name: "Ronny Christensen",
+  pageTitles: {
+    full: "Komplett Digitalt CV",
+    fitness: "Fitness & Coaching CV",
+    tech: "Mjukvara & Teknik CV",
+    management: "Ledarskap & Drift CV",
+    references: "Professionella Referenser"
+  },
   headline: {
     full: "Mångsidig professionell med expertis inom fitness, ledarskap & teknik",
     fitness: "Engagerad Fitness Coach & CrossFit Level 2 Tränare",

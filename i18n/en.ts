@@ -1,5 +1,12 @@
 export const en = {
   name: "Ronny Christensen",
+  pageTitles: {
+      full: "Comprehensive Digital Resume",
+      fitness: "Fitness & Coaching Resume",
+      tech: "Software & Tech Resume",
+      management: "Management & Operations Resume",
+      references: "Professional References"
+  },
   headline: {
       full: "Versatile Professional with expertise in Fitness, Management & Tech",
       fitness: "Dedicated Fitness Coach & CrossFit Level 2 Trainer",

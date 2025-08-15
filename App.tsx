@@ -234,10 +234,14 @@ const App: React.FC = () => {
   const resumeContainerRef = useRef<HTMLDivElement>(null);
   const t = useMemo(() => translations[language], [language]);
 
+  const pageTitle = useMemo(() => t.pageTitles[activeTab], [t, activeTab]);
+
   const activeCategoryForText = useMemo((): 'full' | 'fitness' | 'tech' | 'management' => {
     if (activeTab === 'fitness' || activeTab === 'tech' || activeTab === 'management') return activeTab;
     return 'full';
   }, [activeTab]);
+    
+  const headlineText = useMemo(() => t.headline[activeCategoryForText], [t, activeCategoryForText]);
     
   const coverLetterForTab = useMemo(() => {
     if (activeTab === 'fitness' || activeTab === 'tech' || activeTab === 'management') {
@@ -328,6 +332,18 @@ const App: React.FC = () => {
       </NavBar>
 
       <main ref={resumeContainerRef} className="p-4 sm:p-6 lg:p-10 sm:pt-24 print:p-0 bg-gray-50 min-h-screen">
+        <header className="text-center mb-10 animate-fade-in print-section">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
+                {t.name}
+            </h1>
+            <h2 key={activeTab} className="text-2xl sm:text-3xl font-bold text-orange-600 mt-2 animate-fade-in">
+                {pageTitle}
+            </h2>
+            <p className="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                {headlineText}
+            </p>
+        </header>
+        
         <CollapsibleSection sectionId="summary" title={t.sections.summary} isCollapsed={collapsedSections.summary} onToggle={handleToggleCollapse}>
           <p className="text-gray-700">{t.summary[activeCategoryForText]}</p>
         </CollapsibleSection>
