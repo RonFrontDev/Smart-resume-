@@ -9,6 +9,22 @@
       /* For a more professional look */
       @import url('https://rsms.me/inter/inter.css');
       html { font-family: 'Inter', sans-serif; }
+      
+      /* Animation Keyframes */
+      @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+      .animate-fade-in {
+          animation: fadeIn 0.5s ease-out forwards;
+      }
+      @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in-up {
+          animation: fadeInUp 0.6s ease-out forwards;
+      }
 
       /* Print-specific styles for a clean, paper-friendly resume */
       @media print {
