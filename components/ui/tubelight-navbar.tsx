@@ -1,6 +1,5 @@
 
 
-
 import React from "react"
 import { motion } from "framer-motion"
 import { LucideIcon } from "lucide-react"
@@ -14,6 +13,7 @@ export interface NavColorClasses {
   bg: string
   lamp: string
   glow: string
+  ring: string
 }
 
 export interface NavItem {
@@ -40,7 +40,9 @@ export function NavBar({ items, className, activeTab, onTabChange, children }: N
         className
       )}
     >
-      <div className="flex items-center gap-2 bg-white/60 border border-gray-200/80 backdrop-blur-lg p-1 rounded-full shadow-lg">
+      <div className={cn(
+        "flex flex-col sm:flex-row items-center gap-2 bg-white/60 border border-gray-200/80 backdrop-blur-lg p-2 sm:p-1 rounded-2xl sm:rounded-full shadow-lg"
+      )}>
         <nav aria-label="Main navigation">
           <div className="flex items-center gap-2">
             {items.map((item) => {
@@ -56,7 +58,7 @@ export function NavBar({ items, className, activeTab, onTabChange, children }: N
                     "relative flex items-center justify-center gap-2 cursor-pointer text-sm font-semibold px-4 py-2 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
                     isActive ? colors.text : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70",
                     // Dynamically set ring color for focus based on active color
-                    isActive ? "focus-visible:ring-teal-500" : "focus-visible:ring-gray-400"
+                    isActive ? colors.ring : "focus-visible:ring-gray-400"
                   )}
                   aria-pressed={isActive}
                 >
@@ -86,7 +88,9 @@ export function NavBar({ items, className, activeTab, onTabChange, children }: N
             })}
           </div>
         </nav>
-        {children}
+        <div className="flex items-center gap-2">
+            {children}
+        </div>
       </div>
     </div>
   )

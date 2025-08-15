@@ -49,7 +49,7 @@ const LanguageSwitcher: React.FC<{ currentLang: keyof typeof translations; onSel
       <button
         key={code}
         onClick={() => onSelectLang(code as keyof typeof translations)}
-        className={`px-3 py-1 text-xs font-bold rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal-500 ${currentLang === code ? 'bg-white text-teal-700 shadow-sm' : 'bg-transparent text-gray-500 hover:text-gray-800'}`}
+        className={`px-3 py-1 text-xs font-bold rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-orange-500 ${currentLang === code ? 'bg-white text-orange-700 shadow-sm' : 'bg-transparent text-gray-500 hover:text-gray-800'}`}
         aria-pressed={currentLang === code}
       >
         {code.toUpperCase()}
@@ -73,7 +73,7 @@ const ControlButton: React.FC<{ onClick: () => void; title: string; children: Re
 const SkillsSection: React.FC<{ skills: Skill[], title: string }> = ({ skills, title }) => {
   const getSkillColorClasses = (category: Skill['category']) => {
     switch (category) {
-      case 'fitness': return 'bg-teal-100 text-teal-800';
+      case 'fitness': return 'bg-orange-100 text-orange-800';
       case 'tech': return 'bg-blue-100 text-blue-800';
       case 'management': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -102,26 +102,26 @@ const CoverLetter: React.FC<{ text: string }> = ({ text }) => (
 
 const ExperienceCard: React.FC<{ experience: WorkExperience; t: (typeof translations)['en'] }> = ({ experience, t }) => {
   const { fitness = [], professional = [] } = experience.achievements;
-  
-  const getBorderColorClass = (category: WorkCategory) => {
-    switch (category) {
-      case 'Fitness & Coaching': return 'border-l-teal-500';
-      case 'Software & Tech': return 'border-l-blue-500';
-      case 'Management & Operations': return 'border-l-purple-500';
-      default: return 'border-l-gray-300';
+
+  const categoryColors = useMemo(() => {
+    switch (experience.category) {
+      case 'Fitness & Coaching': return { border: 'border-l-orange-500', text: 'text-orange-700', marker: 'marker:text-orange-500' };
+      case 'Software & Tech': return { border: 'border-l-blue-500', text: 'text-blue-700', marker: 'marker:text-blue-500' };
+      case 'Management & Operations': return { border: 'border-l-purple-500', text: 'text-purple-700', marker: 'marker:text-purple-500' };
+      default: return { border: 'border-l-gray-300', text: 'text-gray-700', marker: 'marker:text-gray-500' };
     }
-  };
+  }, [experience.category]);
 
   return (
     <div className={cn(
       "bg-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 print:shadow-none print:p-0 print:mb-4",
       "py-6 pr-6 pl-5 border-l-4",
-      getBorderColorClass(experience.category)
+      categoryColors.border
     )}>
       <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-3">
         <div>
           <h3 className="text-xl font-bold text-gray-800">{experience.role}</h3>
-          <p className="text-md font-semibold text-teal-700">{experience.company}</p>
+          <p className={cn("text-md font-semibold", categoryColors.text)}>{experience.company}</p>
           <p className="text-sm text-gray-500 mt-1">{experience.duration} &bull; {experience.location}</p>
         </div>
       </div>
@@ -130,7 +130,7 @@ const ExperienceCard: React.FC<{ experience: WorkExperience; t: (typeof translat
           {fitness.length > 0 && (
             <div className="mb-4 last:mb-0">
               <h4 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-2">{t.sections.achievements.fitness}</h4>
-              <ul className="list-disc list-inside text-gray-700 space-y-1.5 pl-2 marker:text-teal-500">
+              <ul className={cn("list-disc list-inside text-gray-700 space-y-1.5 pl-2", categoryColors.marker)}>
                 {fitness.map((ach, idx) => <li key={`fit-${idx}`}>{ach}</li>)}
               </ul>
             </div>
@@ -138,7 +138,7 @@ const ExperienceCard: React.FC<{ experience: WorkExperience; t: (typeof translat
           {professional.length > 0 && (
             <div className="mb-4 last:mb-0">
               <h4 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-2">{t.sections.achievements.professional}</h4>
-              <ul className="list-disc list-inside text-gray-700 space-y-1.5 pl-2 marker:text-teal-500">
+              <ul className={cn("list-disc list-inside text-gray-700 space-y-1.5 pl-2", categoryColors.marker)}>
                 {professional.map((ach, idx) => <li key={`pro-${idx}`}>{ach}</li>)}
               </ul>
             </div>
@@ -202,15 +202,15 @@ const ContactModal: React.FC<{ t: (typeof translations)['en']; onClose: () => vo
         <h2 id="contact-modal-title" className="text-2xl font-bold text-gray-800 mb-6 text-center">{t.contact.title}</h2>
         <div className="space-y-4 text-lg">
           <a href={`tel:${t.contact.phone}`} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors">
-            <PhoneIcon className="h-6 w-6 text-teal-600 flex-shrink-0" /> 
+            <PhoneIcon className="h-6 w-6 text-orange-600 flex-shrink-0" /> 
             <span className="text-gray-700">{t.contact.phone}</span>
           </a>
           <a href={`mailto:${t.contact.email}`} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors">
-            <MailIcon className="h-6 w-6 text-teal-600 flex-shrink-0" />
+            <MailIcon className="h-6 w-6 text-orange-600 flex-shrink-0" />
             <span className="text-gray-700">{t.contact.email}</span>
           </a>
           <a href={`https://${t.online.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors print-show-url">
-            <LinkedInIcon className="h-6 w-6 text-teal-600 flex-shrink-0" />
+            <LinkedInIcon className="h-6 w-6 text-orange-600 flex-shrink-0" />
             <span className="text-gray-700">{t.online.linkedinText}</span>
           </a>
         </div>
@@ -247,11 +247,11 @@ const App: React.FC = () => {
   }, [activeTab, t]);
 
   const navItems = useMemo((): NavItem[] => [
-    { name: 'full', title: t.tabs.full, url: '#', icon: FileText, colorClasses: { text: 'text-gray-700', bg: 'bg-gray-500/10', lamp: 'bg-gray-500', glow: 'bg-gray-500/20' } },
-    { name: 'fitness', title: t.tabs.fitness, url: '#', icon: Dumbbell, colorClasses: { text: 'text-teal-700', bg: 'bg-teal-500/10', lamp: 'bg-teal-500', glow: 'bg-teal-500/20' } },
-    { name: 'tech', title: t.tabs.tech, url: '#', icon: Cpu, colorClasses: { text: 'text-blue-700', bg: 'bg-blue-500/10', lamp: 'bg-blue-500', glow: 'bg-blue-500/20' } },
-    { name: 'management', title: t.tabs.management, url: '#', icon: Briefcase, colorClasses: { text: 'text-purple-700', bg: 'bg-purple-500/10', lamp: 'bg-purple-500', glow: 'bg-purple-500/20' } },
-    { name: 'references', title: t.tabs.references, url: '#', icon: Users, colorClasses: { text: 'text-indigo-700', bg: 'bg-indigo-500/10', lamp: 'bg-indigo-500', glow: 'bg-indigo-500/20' } },
+    { name: 'full', title: t.tabs.full, url: '#', icon: FileText, colorClasses: { text: 'text-gray-700', bg: 'bg-gray-500/10', lamp: 'bg-gray-500', glow: 'bg-gray-500/20', ring: 'focus-visible:ring-gray-500' } },
+    { name: 'fitness', title: t.tabs.fitness, url: '#', icon: Dumbbell, colorClasses: { text: 'text-orange-700', bg: 'bg-orange-500/10', lamp: 'bg-orange-500', glow: 'bg-orange-500/20', ring: 'focus-visible:ring-orange-500' } },
+    { name: 'tech', title: t.tabs.tech, url: '#', icon: Cpu, colorClasses: { text: 'text-blue-700', bg: 'bg-blue-500/10', lamp: 'bg-blue-500', glow: 'bg-blue-500/20', ring: 'focus-visible:ring-blue-500' } },
+    { name: 'management', title: t.tabs.management, url: '#', icon: Briefcase, colorClasses: { text: 'text-purple-700', bg: 'bg-purple-500/10', lamp: 'bg-purple-500', glow: 'bg-purple-500/20', ring: 'focus-visible:ring-purple-500' } },
+    { name: 'references', title: t.tabs.references, url: '#', icon: Users, colorClasses: { text: 'text-indigo-700', bg: 'bg-indigo-500/10', lamp: 'bg-indigo-500', glow: 'bg-indigo-500/20', ring: 'focus-visible:ring-indigo-500' } },
   ], [t]);
 
   const experiencesInLang = useMemo(() => {
@@ -355,7 +355,7 @@ const App: React.FC = () => {
                 {t.references.list.map((ref: Reference, index: number) => (
                   <div key={`${ref.name}-${index}`} className="p-4 bg-gray-50 rounded-lg">
                     <p className="font-bold text-gray-800">{ref.name}</p>
-                    <p className="text-teal-700">{ref.role}</p>
+                    <p className="text-orange-700">{ref.role}</p>
                     <p className="text-gray-500">{ref.contact}</p>
                   </div>
                 ))}
