@@ -1,5 +1,7 @@
+
+
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import type { WorkExperience, AppTab, Skill, Reference } from './types';
+import type { WorkExperience, AppTab, Skill, Reference, WorkCategory } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon } from './components/icons';
 import { FileText, Dumbbell, Briefcase, Users, Cpu } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
@@ -7,6 +9,7 @@ import { en } from './i18n/en';
 import { da } from './i18n/da';
 import { sv } from './i18n/sv';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
+import { cn } from './lib/utils';
 
 // --- DATA & TRANSLATIONS ---
 const translations = { en, da, sv };
@@ -67,16 +70,29 @@ const ControlButton: React.FC<{ onClick: () => void; title: string; children: Re
   </button>
 );
 
-const SkillsSection: React.FC<{ skills: Skill[], title: string }> = ({ skills, title }) => (
-  <div className="mt-6">
-    <h3 className="text-lg font-bold text-gray-700 mb-3">{title}</h3>
-    <div className="flex flex-wrap gap-2">
-      {skills.map(skill => (
-        <span key={skill.name} className="bg-teal-100 text-teal-800 text-sm font-medium px-3 py-1 rounded-full">{skill.name}</span>
-      ))}
+const SkillsSection: React.FC<{ skills: Skill[], title: string }> = ({ skills, title }) => {
+  const getSkillColorClasses = (category: Skill['category']) => {
+    switch (category) {
+      case 'fitness': return 'bg-teal-100 text-teal-800';
+      case 'tech': return 'bg-blue-100 text-blue-800';
+      case 'management': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  return (
+    <div className="mt-6">
+      <h3 className="text-lg font-bold text-gray-700 mb-3">{title}</h3>
+      <div className="flex flex-wrap gap-2">
+        {skills.map(skill => (
+          <span key={skill.name} className={cn("text-sm font-medium px-3 py-1 rounded-full", getSkillColorClasses(skill.category))}>
+            {skill.name}
+          </span>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CoverLetter: React.FC<{ text: string }> = ({ text }) => (
   <div className="bg-gray-100/80 rounded-lg p-4 mt-6">
@@ -86,8 +102,22 @@ const CoverLetter: React.FC<{ text: string }> = ({ text }) => (
 
 const ExperienceCard: React.FC<{ experience: WorkExperience; t: (typeof translations)['en'] }> = ({ experience, t }) => {
   const { fitness = [], professional = [] } = experience.achievements;
+  
+  const getBorderColorClass = (category: WorkCategory) => {
+    switch (category) {
+      case 'Fitness & Coaching': return 'border-l-teal-500';
+      case 'Software & Tech': return 'border-l-blue-500';
+      case 'Management & Operations': return 'border-l-purple-500';
+      default: return 'border-l-gray-300';
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 print:shadow-none print:p-0 print:mb-4">
+    <div className={cn(
+      "bg-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 print:shadow-none print:p-0 print:mb-4",
+      "py-6 pr-6 pl-5 border-l-4",
+      getBorderColorClass(experience.category)
+    )}>
       <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-3">
         <div>
           <h3 className="text-xl font-bold text-gray-800">{experience.role}</h3>
@@ -95,7 +125,7 @@ const ExperienceCard: React.FC<{ experience: WorkExperience; t: (typeof translat
           <p className="text-sm text-gray-500 mt-1">{experience.duration} &bull; {experience.location}</p>
         </div>
       </div>
-      {(fitness.length || professional.length) && (
+      {(fitness.length > 0 || professional.length > 0) && (
         <div className="mt-4 border-t border-gray-100 pt-4">
           {fitness.length > 0 && (
             <div className="mb-4 last:mb-0">
@@ -217,11 +247,11 @@ const App: React.FC = () => {
   }, [activeTab, t]);
 
   const navItems = useMemo((): NavItem[] => [
-    { name: 'full', title: t.tabs.full, url: '#', icon: FileText },
-    { name: 'fitness', title: t.tabs.fitness, url: '#', icon: Dumbbell },
-    { name: 'tech', title: t.tabs.tech, url: '#', icon: Cpu },
-    { name: 'management', title: t.tabs.management, url: '#', icon: Briefcase },
-    { name: 'references', title: t.tabs.references, url: '#', icon: Users },
+    { name: 'full', title: t.tabs.full, url: '#', icon: FileText, colorClasses: { text: 'text-gray-700', bg: 'bg-gray-500/10', lamp: 'bg-gray-500', glow: 'bg-gray-500/20' } },
+    { name: 'fitness', title: t.tabs.fitness, url: '#', icon: Dumbbell, colorClasses: { text: 'text-teal-700', bg: 'bg-teal-500/10', lamp: 'bg-teal-500', glow: 'bg-teal-500/20' } },
+    { name: 'tech', title: t.tabs.tech, url: '#', icon: Cpu, colorClasses: { text: 'text-blue-700', bg: 'bg-blue-500/10', lamp: 'bg-blue-500', glow: 'bg-blue-500/20' } },
+    { name: 'management', title: t.tabs.management, url: '#', icon: Briefcase, colorClasses: { text: 'text-purple-700', bg: 'bg-purple-500/10', lamp: 'bg-purple-500', glow: 'bg-purple-500/20' } },
+    { name: 'references', title: t.tabs.references, url: '#', icon: Users, colorClasses: { text: 'text-indigo-700', bg: 'bg-indigo-500/10', lamp: 'bg-indigo-500', glow: 'bg-indigo-500/20' } },
   ], [t]);
 
   const experiencesInLang = useMemo(() => {
@@ -241,7 +271,7 @@ const App: React.FC = () => {
 
   const displayedSkills = useMemo(() => {
     if (activeTab === 'full') return ALL_SKILLS;
-    return ALL_SKILLS.filter(skill => skill.category === activeTab || skill.category === 'both');
+    return ALL_SKILLS.filter(skill => skill.category === activeTab);
   }, [activeTab]);
 
   const handleToggleCollapse = (sectionId: string) => {
@@ -297,20 +327,26 @@ const App: React.FC = () => {
         </ControlButton>
       </NavBar>
 
-      <main ref={resumeContainerRef} className="p-4 sm:p-6 lg:p-10 print:p-0 bg-gray-50 min-h-screen">
+      <main ref={resumeContainerRef} className="p-4 sm:p-6 lg:p-10 sm:pt-24 print:p-0 bg-gray-50 min-h-screen">
         <CollapsibleSection sectionId="summary" title={t.sections.summary} isCollapsed={collapsedSections.summary} onToggle={handleToggleCollapse}>
           <p className="text-gray-700">{t.summary[activeCategoryForText]}</p>
         </CollapsibleSection>
+        
+        {activeTab !== 'references' && (
+         <>
+          <CollapsibleSection sectionId="skills" title={t.sections.skills} isCollapsed={collapsedSections.skills} onToggle={handleToggleCollapse}>
+            <SkillsSection title={t.sections.skills} skills={displayedSkills} />
+          </CollapsibleSection>
 
-        <CollapsibleSection sectionId="skills" title={t.sections.skills} isCollapsed={collapsedSections.skills} onToggle={handleToggleCollapse}>
-          <SkillsSection title={t.sections.skills} skills={displayedSkills} />
-        </CollapsibleSection>
-
-        <CollapsibleSection sectionId="experience" title={t.sections.experience} isCollapsed={collapsedSections.experience} onToggle={handleToggleCollapse}>
-          {filteredExperiences.map(exp => (
-            <ExperienceCard key={exp.id} experience={exp} t={t} />
-          ))}
-        </CollapsibleSection>
+          <CollapsibleSection sectionId="experience" title={t.sections.experience} isCollapsed={collapsedSections.experience} onToggle={handleToggleCollapse}>
+            <div className="space-y-6">
+              {filteredExperiences.map(exp => (
+                <ExperienceCard key={exp.id} experience={exp} t={t} />
+              ))}
+            </div>
+          </CollapsibleSection>
+         </>
+        )}
 
         {activeTab === 'references' && (
           <CollapsibleSection sectionId="references" title={t.sections.references} isCollapsed={collapsedSections.references} onToggle={handleToggleCollapse}>
