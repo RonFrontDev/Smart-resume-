@@ -76,7 +76,7 @@ const ControlButton: React.FC<{ onClick: () => void; title: string; children: Re
   </button>
 );
 
-const SkillsSection: React.FC<{ skills: Skill[], title: string }> = ({ skills, title }) => {
+const SkillsSection: React.FC<{ skills: Skill[] }> = ({ skills }) => {
   const getSkillColorClasses = (category: Skill['category']) => {
     switch (category) {
       case 'fitness': return 'bg-orange-100 text-orange-800';
@@ -88,8 +88,7 @@ const SkillsSection: React.FC<{ skills: Skill[], title: string }> = ({ skills, t
   };
 
   return (
-    <div className="mt-6">
-      <h3 className="text-lg font-bold text-gray-700 mb-3">{title}</h3>
+    <div>
       <div className="flex flex-wrap gap-2">
         {skills.map(skill => (
           <span key={skill.name} className={cn("text-sm font-medium px-3 py-1 rounded-full", getSkillColorClasses(skill.category))}>
@@ -457,7 +456,7 @@ const App: React.FC = () => {
         {activeTab !== 'references' && (
          <>
           <CollapsibleSection sectionId="skills" title={t.sections.skills} isCollapsed={collapsedSections.skills} onToggle={handleToggleCollapse}>
-            <SkillsSection title={t.sections.skills} skills={displayedSkills} />
+            <SkillsSection skills={displayedSkills} />
           </CollapsibleSection>
 
           <CollapsibleSection sectionId="experience" title={t.sections.experience} isCollapsed={collapsedSections.experience} onToggle={handleToggleCollapse}>
