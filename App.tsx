@@ -3,13 +3,14 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { WorkExperience, AppTab, Skill, Reference, WorkCategory } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
-import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { en } from './i18n/en';
 import { da } from './i18n/da';
 import { sv } from './i18n/sv';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
 import { cn } from './lib/utils';
+import { ToggleSwitch } from './components/ui/toggle-switch';
 
 // --- DATA & TRANSLATIONS ---
 const translations = { en, da, sv };
@@ -285,7 +286,7 @@ const DownloadConfirmationModal: React.FC<{
           >
             {isDownloading ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -319,6 +320,14 @@ const App: React.FC = () => {
     references: false
   });
   const [isDownloading, setIsDownloading] = useState(false);
+  const [developmentStatus, setDevelopmentStatus] = useState<{ [key: string]: boolean }>({
+    full: true,
+    fitness: false,
+    tech: true,
+    management: false,
+    'content-creation': true,
+    references: false,
+  });
   const resumeContainerRef = useRef<HTMLDivElement>(null);
   const t = useMemo(() => translations[language], [language]);
 
@@ -385,6 +394,10 @@ const App: React.FC = () => {
   const handleToggleCollapse = (sectionId: string) => {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
   };
+  
+  const handleDevModeChange = (checked: boolean) => {
+    setDevelopmentStatus(prev => ({ ...prev, [activeTab]: checked }));
+  };
 
   const visibleSectionIds = useMemo(() => activeTab === 'references' ? ['references'] : ['summary', 'skills', 'experience'], [activeTab]);
   const areAllCurrentlyCollapsed = useMemo(() => visibleSectionIds.every(id => !!collapsedSections[id]), [visibleSectionIds, collapsedSections]);
@@ -425,15 +438,25 @@ const App: React.FC = () => {
     <>
       <NavBar items={navItems} activeTab={activeTab} onTabChange={handleTabChange}>
         <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
-        <ControlButton onClick={() => setIsContactModalOpen(true)} title="Contact">
+        <ControlButton onClick={() => setIsContactModalOpen(true)} title={t.tooltips.viewContact}>
           <MailIcon />
         </ControlButton>
-        <ControlButton onClick={() => setIsDownloadModalOpen(true)} title="Download PDF" disabled={isDownloading}>
+        <ControlButton onClick={() => setIsDownloadModalOpen(true)} title={t.tooltips.download} disabled={isDownloading}>
           <DownloadIcon />
         </ControlButton>
-        <ControlButton onClick={handleToggleAll} title="Toggle All">
+        <ControlButton onClick={handleToggleAll} title={areAllCurrentlyCollapsed ? t.tooltips.unfoldAll : t.tooltips.collapseAll}>
           {areAllCurrentlyCollapsed ? <ChevronDoubleDownIcon /> : <ChevronDoubleUpIcon />}
         </ControlButton>
+        {activeTab !== 'references' && (
+            <div className="flex items-center gap-2 p-1.5" title={t.tooltips.toggleDevelopmentMode}>
+                <ToggleSwitch 
+                    id="dev-mode-toggle"
+                    checked={!!developmentStatus[activeTab]} 
+                    onChange={handleDevModeChange}
+                    size="sm"
+                />
+            </div>
+        )}
       </NavBar>
 
       <main ref={resumeContainerRef} className="p-4 pb-24 sm:pt-40 print:p-0 bg-gray-50 min-h-screen">
@@ -449,6 +472,19 @@ const App: React.FC = () => {
             </p>
         </header>
         
+        {developmentStatus[activeTab] && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-0 mb-6 no-print animate-fade-in print:hidden">
+              <div className="bg-yellow-100/80 backdrop-blur-sm border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg shadow-sm" role="alert">
+                <div className="flex items-center">
+                  <AlertTriangle className="h-5 w-5 mr-3 flex-shrink-0" />
+                  <div>
+                    <p className="font-semibold">{t.developmentNotice}</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+        )}
+
         <CollapsibleSection sectionId="summary" title={t.sections.summary} isCollapsed={collapsedSections.summary} onToggle={handleToggleCollapse}>
           <p className="text-gray-700">{t.summary[activeCategoryForText]}</p>
         </CollapsibleSection>

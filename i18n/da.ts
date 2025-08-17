@@ -34,8 +34,10 @@ export const da = {
       viewContact: "Vis Kontaktinformation",
       collapseAll: "Fold alle sektioner sammen",
       unfoldAll: "Fold alle sektioner ud",
-      download: "Download som PDF"
+      download: "Download som PDF",
+      toggleDevelopmentMode: "Slå udviklingstilstand til/fra"
   },
+  developmentNotice: "Dette CV er under udvikling. Oplysninger kan være ufuldstændige eller blive ændret.",
   downloadModal: {
     title: "Bekræft Download",
     message: "Download CV'et på {language}?",

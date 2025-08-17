@@ -34,8 +34,10 @@ export const en = {
       viewContact: "View Contact Information",
       collapseAll: "Collapse All Sections",
       unfoldAll: "Unfold All Sections",
-      download: "Download as PDF"
+      download: "Download as PDF",
+      toggleDevelopmentMode: "Toggle Development Mode"
   },
+  developmentNotice: "This resume is currently under development. Information may be incomplete or subject to change.",
   downloadModal: {
     title: "Confirm Download",
     message: "Download the resume in {language}?",

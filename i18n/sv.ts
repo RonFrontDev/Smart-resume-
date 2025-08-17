@@ -34,8 +34,10 @@ export const sv = {
       viewContact: "Visa Kontaktinformation",
       collapseAll: "Fäll ihop alla sektioner",
       unfoldAll: "Fäll ut alla sektioner",
-      download: "Ladda ner som PDF"
+      download: "Ladda ner som PDF",
+      toggleDevelopmentMode: "Växla utvecklingsläge"
   },
+  developmentNotice: "Detta CV är under utveckling. Information kan vara ofullständig eller kan komma att ändras.",
   downloadModal: {
     title: "Bekräfta nedladdning",
     message: "Ladda ner CV:t på {language}?",
