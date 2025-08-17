@@ -45,6 +45,15 @@ export const en = {
     confirm: "Download",
     downloading: "Downloading..."
   },
+  devModeModal: {
+    titleActivate: "Activate Development Mode",
+    titleDeactivate: "Deactivate Development Mode",
+    message: "Please enter the code to proceed.",
+    codeLabel: "Code",
+    confirm: "Confirm",
+    cancel: "Cancel",
+    error: "Incorrect code. Please try again."
+  },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   references: {
       title: "References available upon request",

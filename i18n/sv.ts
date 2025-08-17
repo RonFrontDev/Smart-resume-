@@ -45,6 +45,15 @@ export const sv = {
     confirm: "Ladda ner",
     downloading: "Laddar ner..."
   },
+  devModeModal: {
+    titleActivate: "Aktivera Utvecklingsläge",
+    titleDeactivate: "Avaktivera Utvecklingsläge",
+    message: "Vänligen ange koden för att fortsätta.",
+    codeLabel: "Kod",
+    confirm: "Bekräfta",
+    cancel: "Avbryt",
+    error: "Felaktig kod. Försök igen."
+  },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
   references: {
       title: "Referenser lämnas på begäran",

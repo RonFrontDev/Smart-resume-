@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { WorkExperience, AppTab, Skill, Reference, WorkCategory } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
-import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { en } from './i18n/en';
 import { da } from './i18n/da';
@@ -307,12 +307,108 @@ const DownloadConfirmationModal: React.FC<{
   );
 };
 
+const DevModeModal: React.FC<{
+  t: (typeof translations)['en'];
+  onClose: () => void;
+  onConfirm: (code: string) => boolean;
+  isActivating: boolean;
+}> = ({ t, onClose, onConfirm, isActivating }) => {
+  const [code, setCode] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    inputRef.current?.focus();
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!onConfirm(code)) {
+      setError(t.devModeModal.error);
+      setCode('');
+      inputRef.current?.focus();
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm animate-fade-in no-print"
+      aria-labelledby="dev-mode-modal-title"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl p-8 m-4 max-w-sm w-full animate-fade-in-up"
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600" aria-label={t.devModeModal.cancel}>
+          <XIcon className="h-6 w-6" />
+        </button>
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
+            <KeyRound className="h-6 w-6 text-yellow-600" />
+          </div>
+          <h2 id="dev-mode-modal-title" className="text-xl font-bold text-gray-800 mt-4">
+            {isActivating ? t.devModeModal.titleActivate : t.devModeModal.titleDeactivate}
+          </h2>
+          <p className="mt-2 text-gray-600">
+            {t.devModeModal.message}
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div>
+            <label htmlFor="dev-mode-code" className="sr-only">{t.devModeModal.codeLabel}</label>
+            <input
+              ref={inputRef}
+              id="dev-mode-code"
+              type="password"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value);
+                if (error) setError(null);
+              }}
+              className="w-full px-4 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              placeholder="••••"
+              autoComplete="off"
+            />
+            {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
+          </div>
+          <div className="flex flex-col sm:flex-row-reverse gap-3">
+            <button
+              type="submit"
+              className="w-full sm:w-auto flex-1 px-6 py-2.5 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors"
+            >
+              {t.devModeModal.confirm}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full sm:w-auto flex-1 px-6 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+            >
+              {t.devModeModal.cancel}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 // --- MAIN APP ---
 const App: React.FC = () => {
   const [language, setLanguage] = useState<keyof typeof translations>('en');
   const [activeTab, setActiveTab] = useState<AppTab>('full');
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isDevModeModalOpen, setIsDevModeModalOpen] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
     skills: false,
@@ -395,8 +491,20 @@ const App: React.FC = () => {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
   };
   
-  const handleDevModeChange = (checked: boolean) => {
-    setDevelopmentStatus(prev => ({ ...prev, [activeTab]: checked }));
+  const handleDevModeChange = () => {
+    setIsDevModeModalOpen(true);
+  };
+  
+  const handleDevModeConfirm = (code: string): boolean => {
+      if (code === '2010') {
+          setDevelopmentStatus(prev => ({
+              ...prev,
+              [activeTab]: !prev[activeTab],
+          }));
+          setIsDevModeModalOpen(false);
+          return true;
+      }
+      return false;
   };
 
   const visibleSectionIds = useMemo(() => activeTab === 'references' ? ['references'] : ['summary', 'skills', 'experience'], [activeTab]);
@@ -529,6 +637,12 @@ const App: React.FC = () => {
         onConfirm={handleDownloadPdf}
         language={language}
         isDownloading={isDownloading}
+      />}
+      {isDevModeModalOpen && <DevModeModal
+        t={t}
+        onClose={() => setIsDevModeModalOpen(false)}
+        onConfirm={handleDevModeConfirm}
+        isActivating={!developmentStatus[activeTab]}
       />}
     </>
   );

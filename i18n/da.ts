@@ -45,6 +45,15 @@ export const da = {
     confirm: "Download",
     downloading: "Downloader..."
   },
+  devModeModal: {
+    titleActivate: "Aktivér Udviklingstilstand",
+    titleDeactivate: "Deaktivér Udviklingstilstand",
+    message: "Indtast venligst koden for at fortsætte.",
+    codeLabel: "Kode",
+    confirm: "Bekræft",
+    cancel: "Annuller",
+    error: "Forkert kode. Prøv venligst igen."
+  },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   references: {
       title: "Referencer gives på anmodning",
