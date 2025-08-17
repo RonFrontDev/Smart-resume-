@@ -35,7 +35,7 @@ const workData: Omit<WorkExperience, 'role' | 'achievements'>[] = [
   { id: "kraftvrk", company: "Kraftvrk", duration: "June 2024 - Present", location: "Copenhagen, Denmark", category: ['Fitness Coaching', 'Content Creation'] },
   { id: "bookingboard", company: "Booking Board · Freelance", duration: "June 2023 - June 2024", location: "Berlin · Remote", category: ['Software Development'] },
   { id: "apollo", company: "Apollo Travels", duration: "April 2022 - March 2023", location: "Greece, Fuerteventura & Egypt", category: ['Fitness Coaching', 'Hospitality & Service'] },
-  { id: "artesuave", company: "Arte Suave", duration: "January 2021 - Present", location: "Copenhagen, Denmark", category: ['Fitness Coaching'] },
+  { id: "artesuave", company: "Arte Suave", duration: "January 2021 - Present", location: "Copenhagen, Denmark", category: ['Fitness Coaching', 'Content Creation'] },
   { id: "formfit", company: "Form & Fitness", duration: "2019 - Present", location: "Copenhagen, Denmark", category: ['Fitness Coaching'] },
   { id: "sats", company: "SATS", duration: "2019 - 2021", location: "Copenhagen, Denmark", category: ['Fitness Coaching'] },
   { id: "fitnessx", company: "FitnessX", duration: "2019 - 2021", location: "Copenhagen, Denmark", category: ['Fitness Coaching'] },
