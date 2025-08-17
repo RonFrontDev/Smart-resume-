@@ -15,12 +15,16 @@ import { cn } from './lib/utils';
 const translations = { en, da, sv };
 
 const ALL_SKILLS: Skill[] = [
-  { name: "CrossFit Level 2", category: 'fitness' },
-  { name: "Program Design", category: 'fitness' },
-  { name: "Athlete Coaching", category: 'fitness' },
-  { name: "Boxing Instruction", category: 'fitness' },
-  { name: "HIIT", category: 'fitness' },
-  { name: "Community Engagement", category: 'fitness' },
+  { name: "CrossFit Coaching", category: 'fitness' },
+  { name: "Class Programming & Workout Design", category: 'fitness' },
+  { name: "Technique & Movement Instruction (Olympic lifting, gymnastics, conditioning)", category: 'fitness' },
+  { name: "Injury Prevention & Scaling for All Levels", category: 'fitness' },
+  { name: "Mobility & Recovery Guidance", category: 'fitness' },
+  { name: "Group Coaching & One-on-One Training", category: 'fitness' },
+  { name: "Class Management & Time Efficiency", category: 'fitness' },
+  { name: "Motivational Coaching & Athlete Development", category: 'fitness' },
+  { name: "Building Community & Member Engagement", category: 'fitness' },
+  { name: "Workshop & Event Organization", category: 'fitness' },
   { name: "Project Management", category: 'management' },
   { name: "Operational Management", category: 'management' },
   { name: "Client Relations", category: 'management' },
@@ -433,7 +437,7 @@ const App: React.FC = () => {
         </ControlButton>
       </NavBar>
 
-      <main ref={resumeContainerRef} className="p-4 sm:p-6 lg:p-10 sm:pt-24 print:p-0 bg-gray-50 min-h-screen">
+      <main ref={resumeContainerRef} className="p-4 pb-24 sm:p-6 lg:p-10 sm:pt-24 print:p-0 bg-gray-50 min-h-screen">
         <header className="text-center mb-10 animate-fade-in print-section">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
                 {t.name}
