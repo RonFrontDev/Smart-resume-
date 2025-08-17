@@ -10,7 +10,7 @@ export const en = {
   },
   headline: {
       full: "Versatile Professional with expertise in Fitness, Management & Tech",
-      fitness: "Dedicated Fitness Coach & CrossFit Level 2 Trainer",
+      fitness: "Dedicated Fitness Coach & CrossFit Trainer",
       tech: "Full-Stack Developer & Digital Product Creator",
       management: "Strategic Project & Operations Manager",
       "content-creation": "Creative Content Strategist & Social Media Expert"

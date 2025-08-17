@@ -10,7 +10,7 @@ export const da = {
   },
   headline: {
     full: "Alsidig professionel med ekspertise i fitness, ledelse & tech",
-    fitness: "Dedikeret Fitness Coach & CrossFit Level 2 Træner",
+    fitness: "Dedikeret Fitness Coach & CrossFit Træner",
     tech: "Full-Stack Udvikler & Skaber af Digitale Produkter",
     management: "Strategisk Projekt- & Driftsleder",
     "content-creation": "Kreativ Indholdsstrateg & Social Media Ekspert"

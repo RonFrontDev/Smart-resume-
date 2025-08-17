@@ -10,7 +10,7 @@ export const sv = {
   },
   headline: {
     full: "Mångsidig professionell med expertis inom fitness, ledarskap & teknik",
-    fitness: "Engagerad Fitness Coach & CrossFit Level 2 Tränare",
+    fitness: "Engagerad Fitness Coach & CrossFit Tränare",
     tech: "Full-Stack Utvecklare & Skapare av Digitala Produkter",
     management: "Strategisk Projekt- & Driftledare",
     "content-creation": "Kreativ Innehållsstrateg & Sociala Medier Expert"
