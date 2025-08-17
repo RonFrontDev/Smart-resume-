@@ -436,7 +436,7 @@ const App: React.FC = () => {
         </ControlButton>
       </NavBar>
 
-      <main ref={resumeContainerRef} className="p-4 pb-24 sm:p-6 lg:p-10 sm:pt-40 print:p-0 bg-gray-50 min-h-screen">
+      <main ref={resumeContainerRef} className="p-4 pb-24 sm:pt-40 print:p-0 bg-gray-50 min-h-screen">
         <header className="text-center mb-10 animate-fade-in print-section">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
                 {t.name}
