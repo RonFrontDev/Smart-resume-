@@ -23,13 +23,25 @@ export const sv = {
     "content-creation": "En kreativ och strategisk innehållsskapare med erfarenhet av att utveckla engagerande kampanjer på sociala medier. Kunnig inom videoproduktion, copywriting och innehållsstrategi för att bygga varumärkeskännedom och främja gemenskapsengagemang."
   },
   contact: { title: "Kontaktinformation", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
-  online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
+  online: {
+    linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/",
+    linkedinText: "LinkedIn",
+    instagram: "www.instagram.com/ronnyc_moments/",
+    instagramText: "Instagram"
+  },
   tabs: { full: "CV", fitness: "Fitness", tech: "Teknik", management: "Ledning", contentCreation: "Innehåll", references: "Referenser" },
   tooltips: { 
       viewContact: "Visa Kontaktinformation",
       collapseAll: "Fäll ihop alla sektioner",
       unfoldAll: "Fäll ut alla sektioner",
       download: "Ladda ner som PDF"
+  },
+  downloadModal: {
+    title: "Bekräfta nedladdning",
+    message: "Ladda ner CV:t på {language}?",
+    cancel: "Avbryt",
+    confirm: "Ladda ner",
+    downloading: "Laddar ner..."
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
   references: {
@@ -49,6 +61,6 @@ export const sv = {
       fitnessx: { role: "Instruktör", achievements: { fitness: ["Levererade en mängd olika klasser inklusive CrossFit, styrka och boxning, vilket visar på mångsidighet och bred fitnesskunskap."], professional: [] } },
       cf2400: { role: "Crossfit Box Manager", achievements: { fitness: ["Hanterade den dagliga driften för en CrossFit-anläggning med över 200 medlemmar och främjade en förstklassig träningsmiljö.", "Utformade och implementerade varierade träningsprogram som ökade medlemmarnas färdighetsnivåer och tillfredsställelse.", "Utökade gemenskapen genom att organisera engagerande workshops och sociala evenemang, vilket ökade medlemsbehållningen med 25 %."], professional: ["Styrde alla affärsaspekter, inklusive personalhantering, ekonomisk tillsyn och strategisk planering, vilket ledde till hållbar lönsamhet.", "Rekryterade, utbildade och handledde ett team på 5 coacher, vilket höjde kvaliteten på undervisning och service.", "Genomförde en riktad marknadsföringsstrategi på sociala medier som utökade den digitala räckvidden med 50 % och genererade ett konstant flöde av leads."] } },
       mclernons: { role: "Projektledare", achievements: { fitness: [], professional: ["Hanterade projektgenomförande från början till slut för kommersiella lagerauktioner, och övervakade logistik, personal och kundrelationer.", "Ledde och styrde team ansvariga för inventeringsbedömning, lagerorganisation och auktionsgenomförande.", "Koordinerade framgångsrikt flera högvärdesauktioner för tillgångar från konkursade företag, vilket säkerställde maximal avkastning för intressenterna."] } },
-      csa: { role: "Heltidsinstruktör", achievements: { fitness: ["Coachade ett brett utbud av discipliner inklusive CrossFit, styrka, boxning och Muay Thai under ett decennium.", "Förberedde tävlingsidrottare för tävlingar och matcher, och utvecklade skräddarsydda tränings- och kostplaner.", "Handledde många medlemmar från nybörjare till avancerade nivåer och spelade en nyckelroll i deras långsiktiga fitnessresa."], professional: ["Behöll höga nivåer av kundlojalitet under en 10-årsperiod genom expertcoaching och stark relationsbyggnad.", "Hanterade scheman och programmering för flera discipliner, vilket säkerställde ett balanserat och omfattande gymutbud."] } },
+      csa: { role: "Heltidsinstruktör", achievements: { fitness: ["Coachade ett brett utbud av discipliner inklusive CrossFit, styrka, boxning och Muay Thai under ett decennium.", "Förberedde tävlingsidrottare för tävlingar och matcher, och utvecklade skräddarsydda tränings- och kostplaner.", "Handledde många medlemmar från nybörjare till avancerade nivåer och spelade en nyckelroll i deras långsiktiga fitnessresa."], professional: ["Behöll höga nivåer av kundloyalitet under en 10-årsperiod genom expertcoaching och stark relationsbyggnad.", "Hanterade scheman och programmering för flera discipliner, vilket säkerställde ett balanserat och omfattande gymutbud."] } },
   }
 };

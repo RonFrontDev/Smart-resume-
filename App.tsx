@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { WorkExperience, AppTab, Skill, Reference, WorkCategory } from './types';
-import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon } from './components/icons';
+import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
 import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { en } from './i18n/en';
@@ -226,6 +226,77 @@ const ContactModal: React.FC<{ t: (typeof translations)['en']; onClose: () => vo
             <LinkedInIcon className="h-6 w-6 text-orange-600 flex-shrink-0" />
             <span className="text-gray-700">{t.online.linkedinText}</span>
           </a>
+          <a href={`https://${t.online.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors print-show-url">
+            <InstagramIcon className="h-6 w-6 text-orange-600 flex-shrink-0" />
+            <span className="text-gray-700">{t.online.instagramText}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DownloadConfirmationModal: React.FC<{
+  t: (typeof translations)['en'];
+  onClose: () => void;
+  onConfirm: () => void;
+  language: string;
+  isDownloading: boolean;
+}> = ({ t, onClose, onConfirm, language, isDownloading }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isDownloading) {
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, isDownloading]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm animate-fade-in no-print"
+      aria-labelledby="download-modal-title"
+      role="dialog"
+      aria-modal="true"
+      onClick={() => !isDownloading && onClose()}
+    >
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl p-8 m-4 max-w-sm w-full animate-fade-in-up"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="text-center">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-orange-100">
+                <DownloadIcon className="h-6 w-6 text-orange-600" />
+            </div>
+            <h2 id="download-modal-title" className="text-xl font-bold text-gray-800 mt-4">{t.downloadModal.title}</h2>
+            <p className="mt-2 text-gray-600">
+                {t.downloadModal.message.replace('{language}', language.toUpperCase())}
+            </p>
+        </div>
+        <div className="mt-6 flex flex-col sm:flex-row-reverse sm:justify-center gap-3">
+          <button
+            onClick={onConfirm}
+            disabled={isDownloading}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors disabled:bg-orange-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isDownloading ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>{t.downloadModal.downloading}</span>
+              </>
+            ) : <span>{t.downloadModal.confirm}</span> }
+          </button>
+           <button
+            onClick={onClose}
+            disabled={isDownloading}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-700 font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {t.downloadModal.cancel}
+          </button>
         </div>
       </div>
     </div>
@@ -237,6 +308,7 @@ const App: React.FC = () => {
   const [language, setLanguage] = useState<keyof typeof translations>('en');
   const [activeTab, setActiveTab] = useState<AppTab>('full');
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
     skills: false,
@@ -341,6 +413,7 @@ const App: React.FC = () => {
       }).save().finally(() => {
         setCollapsedSections(originalCollapsedState);
         setIsDownloading(false);
+        setIsDownloadModalOpen(false);
       });
     }, 50);
   };
@@ -352,7 +425,7 @@ const App: React.FC = () => {
         <ControlButton onClick={() => setIsContactModalOpen(true)} title="Contact">
           <MailIcon />
         </ControlButton>
-        <ControlButton onClick={handleDownloadPdf} title="Download PDF" disabled={isDownloading}>
+        <ControlButton onClick={() => setIsDownloadModalOpen(true)} title="Download PDF" disabled={isDownloading}>
           <DownloadIcon />
         </ControlButton>
         <ControlButton onClick={handleToggleAll} title="Toggle All">
@@ -411,6 +484,13 @@ const App: React.FC = () => {
       </main>
 
       {isContactModalOpen && <ContactModal t={t} onClose={() => setIsContactModalOpen(false)} />}
+      {isDownloadModalOpen && <DownloadConfirmationModal 
+        t={t} 
+        onClose={() => !isDownloading && setIsDownloadModalOpen(false)} 
+        onConfirm={handleDownloadPdf}
+        language={language}
+        isDownloading={isDownloading}
+      />}
     </>
   );
 };

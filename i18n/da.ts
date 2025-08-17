@@ -23,13 +23,25 @@ export const da = {
       "content-creation": "En kreativ og strategisk indholdsskaber med erfaring i at udvikle engagerende kampagner på sociale medier. Dygtig inden for videoproduktion, copywriting og indholdsstrategi for at opbygge brandbevidsthed og fremme fællesskabsengagement."
   },
   contact: { title: "Kontaktinformation", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
-  online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
+  online: {
+    linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/",
+    linkedinText: "LinkedIn",
+    instagram: "www.instagram.com/ronnyc_moments/",
+    instagramText: "Instagram"
+  },
   tabs: { full: "CV", fitness: "Fitness", tech: "Tech", management: "Ledelse", contentCreation: "Indhold", references: "Referencer" },
   tooltips: { 
       viewContact: "Vis Kontaktinformation",
       collapseAll: "Fold alle sektioner sammen",
       unfoldAll: "Fold alle sektioner ud",
       download: "Download som PDF"
+  },
+  downloadModal: {
+    title: "Bekræft Download",
+    message: "Download CV'et på {language}?",
+    cancel: "Annuller",
+    confirm: "Download",
+    downloading: "Downloader..."
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   references: {

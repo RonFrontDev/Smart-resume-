@@ -23,13 +23,25 @@ export const en = {
       "content-creation": "A creative and strategic content creator with experience in developing engaging social media campaigns. Proficient in video production, copywriting, and content strategy to build brand awareness and foster community engagement."
   },
   contact: { title: "Contact Information", phone: "+45 24 45 70 80", email: "ronnychristensen1983@gmail.com" },
-  online: { linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/", linkedinText: "LinkedIn" },
+  online: {
+    linkedin: "www.linkedin.com/in/ronny-christensen-08a92957/",
+    linkedinText: "LinkedIn",
+    instagram: "www.instagram.com/ronnyc_moments/",
+    instagramText: "Instagram"
+  },
   tabs: { full: "Full Resume", fitness: "Fitness", tech: "Tech", management: "Management", contentCreation: "Content", references: "References" },
   tooltips: { 
       viewContact: "View Contact Information",
       collapseAll: "Collapse All Sections",
       unfoldAll: "Unfold All Sections",
       download: "Download as PDF"
+  },
+  downloadModal: {
+    title: "Confirm Download",
+    message: "Download the resume in {language}?",
+    cancel: "Cancel",
+    confirm: "Download",
+    downloading: "Downloading..."
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   references: {
