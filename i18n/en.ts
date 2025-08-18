@@ -54,7 +54,14 @@ export const en = {
     cancel: "Cancel",
     error: "Incorrect code. Please try again."
   },
-  sections: { summary: "Summary", skills: "Skills", experience: "Experience", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
+  sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
+  education: {
+    list: [
+      { duration: "January 2020 - October 2021", institution: "Roskilde Technical School", location: "Roskilde, Denmark", degree: "Web Developer" },
+      { duration: "2012 - 2014", institution: "KEA - Design & Business", location: "Copenhagen, Denmark", degree: "E-Designer" },
+      { duration: "2010 - 2011", institution: "College of Engineering", location: "Copenhagen, Denmark", degree: "Entrance Course" }
+    ]
+  },
   references: {
       title: "References available upon request",
       list: [

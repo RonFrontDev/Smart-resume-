@@ -31,3 +31,10 @@ export interface Reference {
     role: string;
     contact: string;
 }
+
+export interface Education {
+    duration: string;
+    institution: string;
+    location: string;
+    degree: string;
+}

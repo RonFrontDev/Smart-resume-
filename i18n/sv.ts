@@ -54,7 +54,14 @@ export const sv = {
     cancel: "Avbryt",
     error: "Felaktig kod. Försök igen."
   },
-  sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
+  sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", education: "Utbildning", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
+  education: {
+    list: [
+        { duration: "Januari 2020 - Oktober 2021", institution: "Roskilde Tekniska Skola", location: "Roskilde, Danmark", degree: "Webbutvecklare" },
+        { duration: "2012 - 2014", institution: "KEA - Design & Business", location: "Köpenhamn, Danmark", degree: "E-Designer" },
+        { duration: "2010 - 2011", institution: "Ingenjörshögskolan i Köpenhamn", location: "Köpenhamn, Danmark", degree: "Förberedande kurs" }
+    ]
+  },
   references: {
       title: "Referenser lämnas på begäran",
       list: [

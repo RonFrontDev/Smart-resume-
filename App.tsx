@@ -1,7 +1,7 @@
 
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import type { WorkExperience, AppTab, Skill, Reference, WorkCategory } from './types';
+import type { WorkExperience, AppTab, Skill, Reference, WorkCategory, Education } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
 import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
@@ -176,7 +176,10 @@ const CollapsibleSection: React.FC<{
   <div className="bg-white/60 backdrop-blur-sm shadow-md rounded-xl mb-6 print-expand">
     <button
       onClick={() => onToggle(sectionId)}
-      className="flex justify-between items-center w-full p-4 sm:p-5 text-left"
+      className={cn(
+        "flex justify-between items-center w-full p-4 sm:p-5 text-left transition-colors duration-200 hover:bg-gray-100/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2",
+        isCollapsed ? 'rounded-xl' : 'rounded-t-xl'
+      )}
       aria-expanded={!isCollapsed}
       aria-controls={`section-content-${sectionId}`}
     >
@@ -286,7 +289,7 @@ const DownloadConfirmationModal: React.FC<{
           >
             {isDownloading ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -413,6 +416,7 @@ const App: React.FC = () => {
     summary: false,
     skills: false,
     experience: false,
+    education: false,
     references: false
   });
   const [isDownloading, setIsDownloading] = useState(false);
@@ -507,7 +511,7 @@ const App: React.FC = () => {
       return false;
   };
 
-  const visibleSectionIds = useMemo(() => activeTab === 'references' ? ['references'] : ['summary', 'skills', 'experience'], [activeTab]);
+  const visibleSectionIds = useMemo(() => activeTab === 'references' ? ['references'] : ['summary', 'skills', 'experience', 'education'], [activeTab]);
   const areAllCurrentlyCollapsed = useMemo(() => visibleSectionIds.every(id => !!collapsedSections[id]), [visibleSectionIds, collapsedSections]);
   const handleToggleAll = () => {
     const shouldCollapse = !areAllCurrentlyCollapsed;
@@ -607,6 +611,18 @@ const App: React.FC = () => {
             <div className="space-y-6">
               {filteredExperiences.map(exp => (
                 <ExperienceCard key={exp.id} experience={exp} t={t} />
+              ))}
+            </div>
+          </CollapsibleSection>
+
+          <CollapsibleSection sectionId="education" title={t.sections.education} isCollapsed={collapsedSections.education} onToggle={handleToggleCollapse}>
+            <div className="space-y-4">
+              {(t.education.list as Education[]).map((edu, index) => (
+                <div key={`${edu.institution}-${index}`} className="p-4 bg-gray-50/50 rounded-lg border-l-4 border-gray-300">
+                  <p className="font-bold text-gray-800 text-lg">{edu.degree}</p>
+                  <p className="text-gray-700 font-semibold">{edu.institution}</p>
+                  <p className="text-sm text-gray-500 mt-1">{edu.duration} &bull; {edu.location}</p>
+                </div>
               ))}
             </div>
           </CollapsibleSection>
