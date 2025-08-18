@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { WorkExperience, AppTab, Skill, Reference, WorkCategory, Education } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
-import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound, Sparkles, Copy, Check, FileDown } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { en } from './i18n/en';
 import { da } from './i18n/da';
@@ -11,6 +11,9 @@ import { sv } from './i18n/sv';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
 import { cn } from './lib/utils';
 import { ToggleSwitch } from './components/ui/toggle-switch';
+import { GoogleGenAI } from "@google/genai";
+import { useCopyToClipboard } from 'usehooks-ts';
+
 
 // --- DATA & TRANSLATIONS ---
 const translations = { en, da, sv };
@@ -405,6 +408,140 @@ const DevModeModal: React.FC<{
   );
 };
 
+const AIHelperModal: React.FC<{
+  t: (typeof translations)['en'];
+  onClose: () => void;
+  activeCategory: string;
+  isGenerating: boolean;
+  onGenerate: (jobDescription: string) => void;
+  result: string;
+  error: string;
+  onStartOver: () => void;
+}> = ({ t, onClose, activeCategory, onGenerate, isGenerating, result, error, onStartOver }) => {
+  const [jobDesc, setJobDesc] = useState('');
+  const [copiedValue, copy] = useCopyToClipboard();
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  const handleCopy = () => {
+    copy(result);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+  
+  const downloadAsFile = (filename: string, content: string, mimeType: string) => {
+    const element = document.createElement('a');
+    const file = new Blob([content], { type: mimeType });
+    element.href = URL.createObjectURL(file);
+    element.download = filename;
+    document.body.appendChild(element); // Required for Firefox
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  const downloadResultAsPdf = (content: string) => {
+    const element = document.createElement('div');
+    element.style.padding = '2rem';
+    element.style.fontFamily = 'Inter, sans-serif';
+    element.style.whiteSpace = 'pre-wrap';
+    element.style.wordBreak = 'break-word';
+    element.style.lineHeight = '1.6';
+    element.style.color = '#333';
+    element.innerText = content;
+
+    html2pdf().from(element).set({
+      margin: [1, 1, 1, 1],
+      filename: `Cover_Letter_Ronny_Christensen.pdf`,
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }).save();
+  };
+  
+  const hasResult = !!result;
+  const hasError = !!error;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm animate-fade-in no-print"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 m-4 max-w-3xl w-full animate-fade-in-up flex flex-col max-h-[90vh]"
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600" aria-label="Close">
+          <XIcon className="h-6 w-6" />
+        </button>
+
+        <div className="flex items-center gap-3 mb-4">
+            <div className="bg-orange-100 p-2 rounded-full">
+                <Sparkles className="h-6 w-6 text-orange-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">
+                {hasResult ? t.aiHelperModal.resultTitle : t.aiHelperModal.title}
+            </h2>
+        </div>
+
+        {hasResult ? (
+          <>
+            <div className="bg-gray-50 border rounded-lg p-4 my-4 overflow-y-auto flex-grow">
+              <pre className="text-gray-700 whitespace-pre-wrap font-sans text-base">{result}</pre>
+            </div>
+            <div className="flex flex-wrap gap-2 justify-end pt-4 border-t">
+              <button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 text-green-700 font-semibold hover:bg-green-200 transition-colors">
+                {isCopied ? <Check size={16} /> : <Copy size={16} />}
+                {isCopied ? t.aiHelperModal.copiedButton : t.aiHelperModal.copyButton}
+              </button>
+              <button onClick={() => downloadAsFile('cover_letter.txt', result, 'text/plain')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                <FileDown size={16} /> {t.aiHelperModal.downloadTxtButton}
+              </button>
+              <button onClick={() => downloadResultAsPdf(result)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                <FileDown size={16} /> {t.aiHelperModal.downloadPdfButton}
+              </button>
+              <button onClick={onStartOver} className="px-4 py-2 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors">{t.aiHelperModal.startOverButton}</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-gray-600 mb-4">{t.aiHelperModal.description.replace('{category}', activeCategory.toLowerCase())}</p>
+            <textarea
+              value={jobDesc}
+              onChange={(e) => setJobDesc(e.target.value)}
+              disabled={isGenerating}
+              className="w-full flex-grow p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100"
+              placeholder={t.aiHelperModal.jobDescriptionPlaceholder}
+            />
+            {hasError && <p className="text-red-500 mt-2">{error}</p>}
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => onGenerate(jobDesc)}
+                disabled={isGenerating || !jobDesc.trim()}
+                className="px-6 py-2.5 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors disabled:bg-orange-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isGenerating ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>{t.aiHelperModal.generatingButton}</span>
+                  </>
+                ) : <span>{t.aiHelperModal.generateButton}</span>}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // --- MAIN APP ---
 const App: React.FC = () => {
   const [language, setLanguage] = useState<keyof typeof translations>('en');
@@ -412,6 +549,10 @@ const App: React.FC = () => {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isDevModeModalOpen, setIsDevModeModalOpen] = useState(false);
+  const [isAiHelperOpen, setIsAiHelperOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationResult, setGenerationResult] = useState('');
+  const [generationError, setGenerationError] = useState('');
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
     skills: false,
@@ -491,6 +632,75 @@ const App: React.FC = () => {
     return ALL_SKILLS.filter(skill => skill.category === activeTab);
   }, [activeTab]);
 
+  const resumeContextForAI = useMemo(() => {
+    const summary = t.summary[activeCategoryForText];
+    const skills = displayedSkills.map(s => s.name);
+    const experiences = filteredExperiences.map(exp => ({
+        role: exp.role,
+        company: exp.company,
+        duration: exp.duration,
+        achievements: [...exp.achievements.fitness, ...exp.achievements.professional],
+    }));
+    return { summary, skills, experiences };
+  }, [t, activeCategoryForText, displayedSkills, filteredExperiences]);
+
+  const handleGenerateApplication = async (jobDescription: string) => {
+    if (!jobDescription.trim() || !process.env.API_KEY) return;
+    setIsGenerating(true);
+    setGenerationResult('');
+    setGenerationError('');
+
+    try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        
+        const stringifiedExperience = resumeContextForAI.experiences.map(e => 
+            `Role: ${e.role} at ${e.company} (${e.duration})\nAchievements:\n- ${e.achievements.join('\n- ')}`
+        ).join('\n\n');
+
+        const systemInstruction = `You are a professional career coach and expert cover letter writer. Your task is to write a compelling, professional, and tailored cover letter for a job application. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
+
+        const userPrompt = `
+        My Resume Information:
+        - Name: ${t.name}
+        - Summary for this role type: ${resumeContextForAI.summary}
+        - Relevant Skills: ${resumeContextForAI.skills.join(', ')}
+        - Relevant Work Experience:
+        ${stringifiedExperience}
+
+        Job Description to Apply For:
+        ---
+        ${jobDescription}
+        ---
+
+        Instructions for the Cover Letter:
+        1. Write it from my perspective (${t.name}).
+        2. Address the key requirements from the job description.
+        3. Directly reference my skills and experiences from the resume info to show I am a strong match.
+        4. Use a professional and confident tone.
+        5. Structure it with an introduction, body paragraphs highlighting my fit, and a conclusion with a call to action.
+        6. Do not invent any skills or experiences not provided in my resume information.
+        7. The output must be ONLY the text of the cover letter, ready to be copied. Do not include extra commentary, titles like "Subject: Cover Letter", or markdown formatting.
+        `;
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: {
+                systemInstruction: systemInstruction,
+            }
+        });
+
+        setGenerationResult(response.text);
+
+    } catch (error) {
+        console.error("Error generating application:", error);
+        setGenerationError(t.aiHelperModal.error);
+    } finally {
+        setIsGenerating(false);
+    }
+  };
+
+
   const handleToggleCollapse = (sectionId: string) => {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
   };
@@ -550,6 +760,9 @@ const App: React.FC = () => {
     <>
       <NavBar items={navItems} activeTab={activeTab} onTabChange={handleTabChange}>
         <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
+        <ControlButton onClick={() => setIsAiHelperOpen(true)} title={t.tooltips.aiHelper}>
+            <Sparkles />
+        </ControlButton>
         <ControlButton onClick={() => setIsContactModalOpen(true)} title={t.tooltips.viewContact}>
           <MailIcon />
         </ControlButton>
@@ -659,6 +872,19 @@ const App: React.FC = () => {
         onClose={() => setIsDevModeModalOpen(false)}
         onConfirm={handleDevModeConfirm}
         isActivating={!developmentStatus[activeTab]}
+      />}
+      {isAiHelperOpen && <AIHelperModal
+        t={t}
+        onClose={() => setIsAiHelperOpen(false)}
+        activeCategory={t.tabs[activeCategoryForText as keyof typeof t.tabs] || t.tabs.full}
+        isGenerating={isGenerating}
+        onGenerate={handleGenerateApplication}
+        result={generationResult}
+        error={generationError}
+        onStartOver={() => {
+            setGenerationResult('');
+            setGenerationError('');
+        }}
       />}
     </>
   );

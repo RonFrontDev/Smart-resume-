@@ -35,7 +35,8 @@ export const en = {
       collapseAll: "Collapse All Sections",
       unfoldAll: "Unfold All Sections",
       download: "Download as PDF",
-      toggleDevelopmentMode: "Toggle Development Mode"
+      toggleDevelopmentMode: "Toggle Development Mode",
+      aiHelper: "AI Application Assistant"
   },
   developmentNotice: "This resume is currently under development. Information may be incomplete or subject to change.",
   downloadModal: {
@@ -53,6 +54,20 @@ export const en = {
     confirm: "Confirm",
     cancel: "Cancel",
     error: "Incorrect code. Please try again."
+  },
+  aiHelperModal: {
+    title: "AI Application Assistant",
+    description: "Paste a job description below. The AI will analyze it against your resume's '{category}' profile and generate a tailored cover letter.",
+    jobDescriptionPlaceholder: "Paste the full job description here...",
+    generateButton: "Generate Cover Letter",
+    generatingButton: "Generating...",
+    error: "An error occurred while generating the application. Please try again.",
+    resultTitle: "Generated Cover Letter",
+    copyButton: "Copy",
+    copiedButton: "Copied!",
+    downloadTxtButton: "Download .txt",
+    downloadPdfButton: "Download .pdf",
+    startOverButton: "Start Over"
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   education: {
