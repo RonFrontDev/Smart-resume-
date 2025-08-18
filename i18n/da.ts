@@ -57,8 +57,8 @@ export const da = {
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", education: "Uddannelse", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   education: {
     list: [
-      { duration: "Januar 2020 - Oktober 2021", institution: "Roskilde Tekniske Skole", location: "Roskilde, Danmark", degree: "Webudvikler" },
-      { duration: "2012 - 2014", institution: "KEA - Design & Business", location: "København, Danmark", degree: "E-Designer" },
+      { duration: "Januar 2020 - Oktober 2021", institution: "Roskilde Tekniske Skole", location: "Roskilde, Danmark", degree: "Frontend Udvikler" },
+      { duration: "2012 - 2014", institution: "KEA - Design & Business", location: "København, Danmark", degree: "Entrepreneurship and design (E-Designer)" },
       { duration: "2010 - 2011", institution: "Ingeniørhøjskolen i København", location: "København, Danmark", degree: "Adgangskursus" }
     ]
   },
