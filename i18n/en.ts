@@ -86,7 +86,9 @@ export const en = {
       generateSummaryButton: "Generate Summary",
       generatingSummaryButton: "Summarizing...",
       summaryError: "An error occurred while generating the summary. Please try again.",
-      downloadJsonButton: "Download .json"
+      downloadJsonButton: "Download .json",
+      matchScoreTitle: "Overall Match Score",
+      matchScoreLabel: "Match"
     }
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },

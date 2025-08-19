@@ -409,6 +409,35 @@ const DevModeModal: React.FC<{
   );
 };
 
+const MatchScoreBar: React.FC<{ score: number; t: (typeof translations)['en'] }> = ({ score, t }) => {
+  const scoreColor = useMemo(() => {
+    if (score >= 80) return 'bg-green-500';
+    if (score >= 50) return 'bg-yellow-500';
+    return 'bg-red-500';
+  }, [score]);
+
+  return (
+    <div className="mb-6">
+      <h3 className="text-lg font-semibold text-gray-800 mb-3">
+        {t.aiHelperModal.skillGap.matchScoreTitle}
+      </h3>
+      <div className="relative w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+        <motion.div
+          className={cn("absolute top-0 left-0 h-full rounded-full", scoreColor)}
+          initial={{ width: 0 }}
+          animate={{ width: `${score}%` }}
+          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-sm font-bold text-white" style={{ textShadow: '0px 1px 2px rgba(0,0,0,0.4)' }}>
+            {Math.round(score)}% {t.aiHelperModal.skillGap.matchScoreLabel}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AIHelperModal: React.FC<{
   t: (typeof translations)['en'];
   onClose: () => void;
@@ -445,6 +474,8 @@ const AIHelperModal: React.FC<{
 
   const formatAnalysisForTxt = (result: SkillGapAnalysisResult) => {
     let content = `${t.aiHelperModal.title}\n\n`;
+    content += `--- ${t.aiHelperModal.skillGap.matchScoreTitle} ---\n`;
+    content += `${result.matchPercentage}% ${t.aiHelperModal.skillGap.matchScoreLabel}\n\n`;
     content += `--- ${t.aiHelperModal.skillGap.gapsTitle} ---\n`;
     if (result.skillGaps.length > 0) {
       result.skillGaps.forEach(gap => {
@@ -561,7 +592,9 @@ const AIHelperModal: React.FC<{
               </div>
             )}
             {activeAiTab === 'skillGap' && analysisResult && (
-                 <div className="bg-gray-50 border rounded-lg p-4 my-4 overflow-y-auto flex-grow">
+                 <div className="bg-gray-50 border rounded-lg p-4 sm:p-6 my-4 overflow-y-auto flex-grow">
+                    <MatchScoreBar score={analysisResult.matchPercentage} t={t} />
+
                     {analysisSummary && (
                         <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-r-lg">
                            <h4 className="text-md font-semibold text-gray-800 mb-2 flex items-center gap-2">
@@ -908,7 +941,8 @@ const App: React.FC = () => {
         1. Carefully compare the "Job Description" with "My Resume Information".
         2. Identify key skills, technologies, or experiences required by the job that are missing or not strongly highlighted in my resume.
         3. Generate a list of actionable suggestions for me to become a stronger candidate. These could include learning new skills, getting certifications, or reframing my existing experience.
-        4. The output must be a valid JSON object. Do not include any text or markdown formatting before or after the JSON object.
+        4. Calculate an overall 'matchPercentage' from 0 to 100, where 100 is a perfect match. Base this on how well my skills and experience align with the job requirements.
+        5. The output must be a valid JSON object. Do not include any text or markdown formatting before or after the JSON object.
         `;
         
         const response = await ai.models.generateContent({
@@ -935,6 +969,10 @@ const App: React.FC = () => {
                             type: Type.ARRAY,
                             description: "A list of actionable suggestions for improvement.",
                             items: { type: Type.STRING }
+                        },
+                        matchPercentage: {
+                            type: Type.NUMBER,
+                            description: "An estimated percentage (0-100) of how well the resume matches the job description."
                         }
                     }
                 }

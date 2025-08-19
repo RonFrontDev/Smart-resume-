@@ -86,7 +86,9 @@ export const da = {
       generateSummaryButton: "Generer Opsummering",
       generatingSummaryButton: "Opsummerer...",
       summaryError: "Der opstod en fejl under generering af opsummeringen. Prøv venligst igen.",
-      downloadJsonButton: "Download .json"
+      downloadJsonButton: "Download .json",
+      matchScoreTitle: "Samlet Match Score",
+      matchScoreLabel: "Match"
     }
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", education: "Uddannelse", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },

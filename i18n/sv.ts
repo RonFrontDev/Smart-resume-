@@ -86,7 +86,9 @@ export const sv = {
       generateSummaryButton: "Generera Sammanfattning",
       generatingSummaryButton: "Sammanfattar...",
       summaryError: "Ett fel uppstod när sammanfattningen genererades. Försök igen.",
-      downloadJsonButton: "Ladda ner .json"
+      downloadJsonButton: "Ladda ner .json",
+      matchScoreTitle: "Total Matchningspoäng",
+      matchScoreLabel: "Matchning"
     }
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", education: "Utbildning", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },

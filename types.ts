@@ -45,4 +45,5 @@ export interface SkillGapAnalysisResult {
     reason: string;
   }[];
   suggestions: string[];
+  matchPercentage: number;
 }
