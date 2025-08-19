@@ -81,7 +81,12 @@ export const en = {
       error: "An error occurred while analyzing. Please try again.",
       gapsTitle: "Potential Gaps",
       suggestionsTitle: "Actionable Suggestions",
-      noGapsFound: "No significant gaps were found based on the provided information. Your profile seems to be a strong match!"
+      noGapsFound: "No significant gaps were found based on the provided information. Your profile seems to be a strong match!",
+      summaryTitle: "Summary",
+      generateSummaryButton: "Generate Summary",
+      generatingSummaryButton: "Summarizing...",
+      summaryError: "An error occurred while generating the summary. Please try again.",
+      downloadJsonButton: "Download .json"
     }
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },

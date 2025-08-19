@@ -81,7 +81,12 @@ export const sv = {
       error: "Ett fel uppstod under analysen. Försök igen.",
       gapsTitle: "Potentiella Luckor",
       suggestionsTitle: "Handlingsbara Förslag",
-      noGapsFound: "Inga betydande luckor hittades baserat på den angivna informationen. Din profil verkar vara en stark matchning!"
+      noGapsFound: "Inga betydande luckor hittades baserat på den angivna informationen. Din profil verkar vara en stark matchning!",
+      summaryTitle: "Sammanfattning",
+      generateSummaryButton: "Generera Sammanfattning",
+      generatingSummaryButton: "Sammanfattar...",
+      summaryError: "Ett fel uppstod när sammanfattningen genererades. Försök igen.",
+      downloadJsonButton: "Ladda ner .json"
     }
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", education: "Utbildning", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },

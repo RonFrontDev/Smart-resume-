@@ -81,7 +81,12 @@ export const da = {
       error: "Der opstod en fejl under analysen. Prøv venligst igen.",
       gapsTitle: "Potentielle Mangler",
       suggestionsTitle: "Handlingsorienterede Forslag",
-      noGapsFound: "Ingen væsentlige mangler fundet baseret på de givne oplysninger. Din profil ser ud til at være et stærkt match!"
+      noGapsFound: "Ingen væsentlige mangler fundet baseret på de givne oplysninger. Din profil ser ud til at være et stærkt match!",
+      summaryTitle: "Opsummering",
+      generateSummaryButton: "Generer Opsummering",
+      generatingSummaryButton: "Opsummerer...",
+      summaryError: "Der opstod en fejl under generering af opsummeringen. Prøv venligst igen.",
+      downloadJsonButton: "Download .json"
     }
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", education: "Uddannelse", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },

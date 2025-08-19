@@ -422,7 +422,16 @@ const AIHelperModal: React.FC<{
   onAnalyze: (jobDescription: string) => void;
   analysisResult: SkillGapAnalysisResult | null;
   analysisError: string;
-}> = ({ t, onClose, activeCategory, onGenerate, isGenerating, result, error, onStartOver, isAnalyzing, onAnalyze, analysisResult, analysisError }) => {
+  isSummarizing: boolean;
+  onGenerateSummary: () => void;
+  analysisSummary: string;
+  summaryError: string;
+}> = ({ 
+  t, onClose, activeCategory, 
+  onGenerate, isGenerating, result, error, onStartOver, 
+  isAnalyzing, onAnalyze, analysisResult, analysisError,
+  isSummarizing, onGenerateSummary, analysisSummary, summaryError 
+}) => {
   const [jobDesc, setJobDesc] = useState('');
   const [copiedValue, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
@@ -434,8 +443,27 @@ const AIHelperModal: React.FC<{
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  const formatAnalysisForTxt = (result: SkillGapAnalysisResult) => {
+    let content = `${t.aiHelperModal.title}\n\n`;
+    content += `--- ${t.aiHelperModal.skillGap.gapsTitle} ---\n`;
+    if (result.skillGaps.length > 0) {
+      result.skillGaps.forEach(gap => {
+        content += `- ${gap.skill}: ${gap.reason}\n`;
+      });
+    } else {
+      content += `${t.aiHelperModal.skillGap.noGapsFound}\n`;
+    }
+    content += `\n--- ${t.aiHelperModal.skillGap.suggestionsTitle} ---\n`;
+    result.suggestions.forEach(suggestion => {
+      content += `- ${suggestion}\n`;
+    });
+    return content;
+  };
+
   const handleCopy = () => {
-    const contentToCopy = activeAiTab === 'coverLetter' ? result : JSON.stringify(analysisResult, null, 2);
+    const contentToCopy = activeAiTab === 'coverLetter' 
+      ? result 
+      : (analysisResult ? formatAnalysisForTxt(analysisResult) : '');
     copy(contentToCopy);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
@@ -534,6 +562,16 @@ const AIHelperModal: React.FC<{
             )}
             {activeAiTab === 'skillGap' && analysisResult && (
                  <div className="bg-gray-50 border rounded-lg p-4 my-4 overflow-y-auto flex-grow">
+                    {analysisSummary && (
+                        <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-400 rounded-r-lg">
+                           <h4 className="text-md font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                               <Lightbulb className="text-orange-500 flex-shrink-0" size={18} /> {t.aiHelperModal.skillGap.summaryTitle}
+                           </h4>
+                           <p className="text-gray-700">{analysisSummary}</p>
+                        </div>
+                    )}
+                    {summaryError && <p className="text-red-500 mb-4">{summaryError}</p>}
+
                     <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <AlertTriangle className="text-red-500 flex-shrink-0" size={20} /> {t.aiHelperModal.skillGap.gapsTitle}
                     </h3>
@@ -562,6 +600,7 @@ const AIHelperModal: React.FC<{
                 {isCopied ? <Check size={16} /> : <Copy size={16} />}
                 {isCopied ? t.aiHelperModal.copiedButton : t.aiHelperModal.copyButton}
               </button>
+              
               {activeAiTab === 'coverLetter' && (
                   <>
                     <button onClick={() => downloadAsFile('cover_letter.txt', result, 'text/plain')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
@@ -572,6 +611,33 @@ const AIHelperModal: React.FC<{
                     </button>
                   </>
               )}
+
+              {activeAiTab === 'skillGap' && analysisResult && (
+                 <>
+                    <button onClick={() => downloadAsFile('skill_gap_analysis.txt', formatAnalysisForTxt(analysisResult), 'text/plain')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                      <FileDown size={16} /> {t.aiHelperModal.downloadTxtButton}
+                    </button>
+                    <button onClick={() => downloadAsFile('skill_gap_analysis.json', JSON.stringify(analysisResult, null, 2), 'application/json')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                      <FileDown size={16} /> {t.aiHelperModal.skillGap.downloadJsonButton}
+                    </button>
+                 </>
+              )}
+
+               {activeAiTab === 'skillGap' && analysisResult && !analysisSummary && (
+                <button onClick={onGenerateSummary} disabled={isSummarizing} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    {isSummarizing ? (
+                        <>
+                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <span>{t.aiHelperModal.skillGap.generatingSummaryButton}</span>
+                        </>
+                    ) : (
+                        <>
+                            <Lightbulb size={16}/> <span>{t.aiHelperModal.skillGap.generateSummaryButton}</span>
+                        </>
+                    )}
+                </button>
+              )}
+
               <button onClick={onStartOver} className="px-4 py-2 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors">{t.aiHelperModal.startOverButton}</button>
             </div>
           </>
@@ -632,6 +698,9 @@ const App: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<SkillGapAnalysisResult | null>(null);
   const [analysisError, setAnalysisError] = useState('');
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [analysisSummary, setAnalysisSummary] = useState('');
+  const [summaryError, setSummaryError] = useState('');
   
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
@@ -883,6 +952,45 @@ const App: React.FC = () => {
     }
   };
 
+  const handleGenerateSummary = async () => {
+    if (!analysisResult || !process.env.API_KEY) return;
+    setIsSummarizing(true);
+    setAnalysisSummary('');
+    setSummaryError('');
+
+    try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const systemInstruction = `You are a helpful career coach. Your task is to provide a brief, encouraging summary of a skill gap analysis for a job candidate. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
+        const userPrompt = `
+        Based on the following skill gap analysis JSON, write a short, encouraging summary (2-3 sentences) for the job candidate. Briefly mention the key areas to focus on without being negative.
+
+        Analysis JSON:
+        ---
+        ${JSON.stringify(analysisResult, null, 2)}
+        ---
+
+        Instructions:
+        1. Keep the tone positive and motivational.
+        2. Summarize the main takeaways from the analysis.
+        3. The output must be ONLY the summary text. Do not include any extra commentary, titles, or markdown.
+        `;
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: { systemInstruction }
+        });
+
+        setAnalysisSummary(response.text);
+
+    } catch (error) {
+        console.error("Error generating summary:", error);
+        setSummaryError(t.aiHelperModal.skillGap.summaryError);
+    } finally {
+        setIsSummarizing(false);
+    }
+  };
+
 
   const handleToggleCollapse = (sectionId: string) => {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
@@ -944,6 +1052,8 @@ const App: React.FC = () => {
     setGenerationError('');
     setAnalysisResult(null);
     setAnalysisError('');
+    setAnalysisSummary('');
+    setSummaryError('');
   };
 
   return (
@@ -1085,6 +1195,10 @@ const App: React.FC = () => {
         onAnalyze={handleSkillGapAnalysis}
         analysisResult={analysisResult}
         analysisError={analysisError}
+        isSummarizing={isSummarizing}
+        onGenerateSummary={handleGenerateSummary}
+        analysisSummary={analysisSummary}
+        summaryError={summaryError}
       />}
     </div>
   );
