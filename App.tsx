@@ -1,4 +1,5 @@
 
+
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import type { WorkExperience, AppTab, Skill, Reference, WorkCategory, Education } from './types';
@@ -614,6 +615,24 @@ const App: React.FC = () => {
     return { backgroundColor: colorMap[glowClass] || 'rgb(107, 114, 128)' };
   }, [activeTab, navItems]);
 
+  const educationCardColorClasses = useMemo(() => {
+    const activeItem = navItems.find(item => item.name === activeTab);
+    if (!activeItem) {
+        return { border: 'border-gray-300', bg: 'bg-gray-50/50', degreeText: 'text-gray-800' };
+    }
+    
+    const colorMap: { [key:string]: { border: string; bg: string; degreeText: string } } = {
+        'bg-gray-500': { border: 'border-gray-400', bg: 'bg-gray-100/80', degreeText: 'text-gray-800' },
+        'bg-orange-500': { border: 'border-orange-500', bg: 'bg-orange-50/80', degreeText: 'text-orange-800' },
+        'bg-blue-500': { border: 'border-blue-500', bg: 'bg-blue-50/80', degreeText: 'text-blue-800' },
+        'bg-purple-500': { border: 'border-purple-500', bg: 'bg-purple-50/80', degreeText: 'text-purple-800' },
+        'bg-yellow-500': { border: 'border-yellow-500', bg: 'bg-yellow-50/80', degreeText: 'text-yellow-800' },
+        'bg-indigo-500': { border: 'border-indigo-500', bg: 'bg-indigo-50/80', degreeText: 'text-indigo-800' },
+    };
+    
+    return colorMap[activeItem.colorClasses.lamp] || { border: 'border-gray-300', bg: 'bg-gray-50/50', degreeText: 'text-gray-800' };
+  }, [activeTab, navItems]);
+
   const experiencesInLang = useMemo(() => {
     return workData.map(job => ({
       ...job,
@@ -853,8 +872,12 @@ const App: React.FC = () => {
           <CollapsibleSection sectionId="education" title={t.sections.education} isCollapsed={collapsedSections.education} onToggle={handleToggleCollapse}>
             <div className="space-y-4">
               {(t.education.list as Education[]).map((edu, index) => (
-                <div key={`${edu.institution}-${index}`} className="p-4 bg-gray-50/50 rounded-lg border-l-4 border-gray-300">
-                  <p className="font-bold text-gray-800 text-lg">{edu.degree}</p>
+                <div key={`${edu.institution}-${index}`} className={cn(
+                  "p-4 rounded-lg border-l-4 transition-colors duration-300",
+                  educationCardColorClasses.bg,
+                  educationCardColorClasses.border
+                )}>
+                  <p className={cn("font-bold text-lg", educationCardColorClasses.degreeText)}>{edu.degree}</p>
                   <p className="text-gray-700 font-semibold">{edu.institution}</p>
                   <p className="text-sm text-gray-500 mt-1">{edu.duration} &bull; {edu.location}</p>
                 </div>
