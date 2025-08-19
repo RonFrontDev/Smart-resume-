@@ -1,6 +1,6 @@
 
-
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import type { WorkExperience, AppTab, Skill, Reference, WorkCategory, Education } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
 import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound, Sparkles, Copy, Check, FileDown } from 'lucide-react';
@@ -597,6 +597,23 @@ const App: React.FC = () => {
     return baseColorClass.replace('700', '600');
   }, [activeTab, navItems]);
 
+  const backgroundStyle = useMemo(() => {
+    const activeItem = navItems.find(item => item.name === activeTab);
+    
+    const colorMap: { [key: string]: string } = {
+        'bg-gray-500/20': 'rgb(107, 114, 128)',
+        'bg-orange-500/20': 'rgb(249, 115, 22)',
+        'bg-blue-500/20': 'rgb(59, 130, 246)',
+        'bg-purple-500/20': 'rgb(139, 92, 246)',
+        'bg-yellow-500/20': 'rgb(234, 179, 8)',
+        'bg-indigo-500/20': 'rgb(99, 102, 241)',
+    };
+    
+    const glowClass = activeItem ? activeItem.colorClasses.glow : 'bg-gray-500/20';
+
+    return { backgroundColor: colorMap[glowClass] || 'rgb(107, 114, 128)' };
+  }, [activeTab, navItems]);
+
   const experiencesInLang = useMemo(() => {
     return workData.map(job => ({
       ...job,
@@ -757,7 +774,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="relative z-0">
+      <motion.div
+        className="fixed top-[-25rem] left-[-35rem] sm:left-[-25rem] w-[60rem] h-[60rem] rounded-full opacity-20 blur-3xl -z-10 no-print"
+        animate={backgroundStyle}
+        transition={{ duration: 0.8, ease: 'easeInOut' }}
+      />
       <NavBar items={navItems} activeTab={activeTab} onTabChange={handleTabChange}>
         <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
         <ControlButton onClick={() => setIsAiHelperOpen(true)} title={t.tooltips.aiHelper}>
@@ -784,7 +806,7 @@ const App: React.FC = () => {
         )}
       </NavBar>
 
-      <main ref={resumeContainerRef} className="p-4 pb-24 sm:pt-40 print:p-0 bg-gray-50 min-h-screen">
+      <main ref={resumeContainerRef} className="p-4 pb-24 sm:pt-40 print:p-0 min-h-screen">
         <header className="text-center mb-10 animate-fade-in print-section">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 tracking-tight">
                 {t.name}
@@ -886,7 +908,7 @@ const App: React.FC = () => {
             setGenerationError('');
         }}
       />}
-    </>
+    </div>
   );
 };
 
