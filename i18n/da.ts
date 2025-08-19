@@ -57,17 +57,32 @@ export const da = {
   },
   aiHelperModal: {
     title: "AI Ansøgningsassistent",
-    description: "Indsæt en jobbeskrivelse nedenfor. AI'en vil analysere den op imod dit CV's '{category}' profil og generere et skræddersyet følgebrev.",
     jobDescriptionPlaceholder: "Indsæt hele jobbeskrivelsen her...",
-    generateButton: "Generer Følgebrev",
-    generatingButton: "Genererer...",
-    error: "Der opstod en fejl under genereringen af ansøgningen. Prøv venligst igen.",
-    resultTitle: "Genereret Følgebrev",
     copyButton: "Kopier",
     copiedButton: "Kopieret!",
     downloadTxtButton: "Download .txt",
     downloadPdfButton: "Download .pdf",
-    startOverButton: "Start forfra"
+    startOverButton: "Start forfra",
+    tabs: {
+      coverLetter: "Følgebrev",
+      skillGap: "Kompetenceanalyse"
+    },
+    coverLetter: {
+      description: "Indsæt en jobbeskrivelse nedenfor. AI'en vil analysere den op imod dit CV's '{category}' profil og generere et skræddersyet følgebrev.",
+      generateButton: "Generer Følgebrev",
+      generatingButton: "Genererer...",
+      error: "Der opstod en fejl under genereringen af ansøgningen. Prøv venligst igen.",
+      resultTitle: "Genereret Følgebrev",
+    },
+    skillGap: {
+      description: "Indsæt en jobbeskrivelse nedenfor. AI'en vil identificere potentielle kompetencegab baseret på din '{category}' profil og foreslå forbedringsområder.",
+      analyzeButton: "Analyser Mine Kompetencer",
+      analyzingButton: "Analyserer...",
+      error: "Der opstod en fejl under analysen. Prøv venligst igen.",
+      gapsTitle: "Potentielle Mangler",
+      suggestionsTitle: "Handlingsorienterede Forslag",
+      noGapsFound: "Ingen væsentlige mangler fundet baseret på de givne oplysninger. Din profil ser ud til at være et stærkt match!"
+    }
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", education: "Uddannelse", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   education: {

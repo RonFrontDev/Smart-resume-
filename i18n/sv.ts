@@ -57,17 +57,32 @@ export const sv = {
   },
   aiHelperModal: {
     title: "AI Ansökningsassistent",
-    description: "Klistra in en jobbannons nedan. AI:n kommer att analysera den mot din CV:s '{category}'-profil och generera ett skräddarsytt personligt brev.",
     jobDescriptionPlaceholder: "Klistra in hela jobbannonsen här...",
-    generateButton: "Generera personligt brev",
-    generatingButton: "Genererar...",
-    error: "Ett fel uppstod när ansökan genererades. Var god försök igen.",
-    resultTitle: "Genererat personligt brev",
     copyButton: "Kopiera",
     copiedButton: "Kopierat!",
     downloadTxtButton: "Ladda ner .txt",
     downloadPdfButton: "Ladda ner .pdf",
-    startOverButton: "Börja om"
+    startOverButton: "Börja om",
+    tabs: {
+      coverLetter: "Personligt Brev",
+      skillGap: "Kompetensanalys"
+    },
+    coverLetter: {
+      description: "Klistra in en jobbannons nedan. AI:n kommer att analysera den mot din CV:s '{category}'-profil och generera ett skräddarsytt personligt brev.",
+      generateButton: "Generera personligt brev",
+      generatingButton: "Genererar...",
+      error: "Ett fel uppstod när ansökan genererades. Var god försök igen.",
+      resultTitle: "Genererat personligt brev",
+    },
+    skillGap: {
+      description: "Klistra in en jobbannons nedan. AI:n kommer att identifiera potentiella kompetensluckor baserat på din '{category}'-profil och föreslå förbättringsområden.",
+      analyzeButton: "Analysera Mina Kompetenser",
+      analyzingButton: "Analyserar...",
+      error: "Ett fel uppstod under analysen. Försök igen.",
+      gapsTitle: "Potentiella Luckor",
+      suggestionsTitle: "Handlingsbara Förslag",
+      noGapsFound: "Inga betydande luckor hittades baserat på den angivna informationen. Din profil verkar vara en stark matchning!"
+    }
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", education: "Utbildning", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
   education: {

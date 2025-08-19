@@ -57,17 +57,32 @@ export const en = {
   },
   aiHelperModal: {
     title: "AI Application Assistant",
-    description: "Paste a job description below. The AI will analyze it against your resume's '{category}' profile and generate a tailored cover letter.",
     jobDescriptionPlaceholder: "Paste the full job description here...",
-    generateButton: "Generate Cover Letter",
-    generatingButton: "Generating...",
-    error: "An error occurred while generating the application. Please try again.",
-    resultTitle: "Generated Cover Letter",
     copyButton: "Copy",
     copiedButton: "Copied!",
     downloadTxtButton: "Download .txt",
     downloadPdfButton: "Download .pdf",
-    startOverButton: "Start Over"
+    startOverButton: "Start Over",
+    tabs: {
+      coverLetter: "Cover Letter",
+      skillGap: "Skill Gap Analysis"
+    },
+    coverLetter: {
+      description: "Paste a job description below. The AI will analyze it against your resume's '{category}' profile and generate a tailored cover letter.",
+      generateButton: "Generate Cover Letter",
+      generatingButton: "Generating...",
+      error: "An error occurred while generating the application. Please try again.",
+      resultTitle: "Generated Cover Letter",
+    },
+    skillGap: {
+      description: "Paste a job description below. The AI will identify potential skill gaps based on your '{category}' profile and suggest areas for improvement.",
+      analyzeButton: "Analyze My Skills",
+      analyzingButton: "Analyzing...",
+      error: "An error occurred while analyzing. Please try again.",
+      gapsTitle: "Potential Gaps",
+      suggestionsTitle: "Actionable Suggestions",
+      noGapsFound: "No significant gaps were found based on the provided information. Your profile seems to be a strong match!"
+    }
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   education: {

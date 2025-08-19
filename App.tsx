@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import type { WorkExperience, AppTab, Skill, Reference, WorkCategory, Education } from './types';
+import type { WorkExperience, AppTab, Skill, Reference, WorkCategory, Education, SkillGapAnalysisResult } from './types';
 import { MailIcon, PhoneIcon, LinkedInIcon, ChevronDownIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon, XIcon, InstagramIcon } from './components/icons';
-import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound, Sparkles, Copy, Check, FileDown } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, KeyRound, Sparkles, Copy, Check, FileDown, ListChecks, Lightbulb } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import { en } from './i18n/en';
 import { da } from './i18n/da';
@@ -12,7 +12,7 @@ import { sv } from './i18n/sv';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
 import { cn } from './lib/utils';
 import { ToggleSwitch } from './components/ui/toggle-switch';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { useCopyToClipboard } from 'usehooks-ts';
 
 
@@ -418,10 +418,15 @@ const AIHelperModal: React.FC<{
   result: string;
   error: string;
   onStartOver: () => void;
-}> = ({ t, onClose, activeCategory, onGenerate, isGenerating, result, error, onStartOver }) => {
+  isAnalyzing: boolean;
+  onAnalyze: (jobDescription: string) => void;
+  analysisResult: SkillGapAnalysisResult | null;
+  analysisError: string;
+}> = ({ t, onClose, activeCategory, onGenerate, isGenerating, result, error, onStartOver, isAnalyzing, onAnalyze, analysisResult, analysisError }) => {
   const [jobDesc, setJobDesc] = useState('');
   const [copiedValue, copy] = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
+  const [activeAiTab, setActiveAiTab] = useState<'coverLetter' | 'skillGap'>('coverLetter');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -430,7 +435,8 @@ const AIHelperModal: React.FC<{
   }, [onClose]);
 
   const handleCopy = () => {
-    copy(result);
+    const contentToCopy = activeAiTab === 'coverLetter' ? result : JSON.stringify(analysisResult, null, 2);
+    copy(contentToCopy);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
@@ -462,8 +468,31 @@ const AIHelperModal: React.FC<{
     }).save();
   };
   
-  const hasResult = !!result;
-  const hasError = !!error;
+  const hasResult = activeAiTab === 'coverLetter' ? !!result : !!analysisResult;
+  const hasError = activeAiTab === 'coverLetter' ? !!error : !!analysisError;
+  const isLoading = isGenerating || isAnalyzing;
+
+  const AITab: React.FC<{
+    title: string;
+    icon: React.ElementType;
+    isActive: boolean;
+    onClick: () => void;
+  }> = ({ title, icon: Icon, isActive, onClick }) => (
+      <button
+        onClick={onClick}
+        className={cn(
+          "flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-t-lg border-b-2 focus:outline-none transition-colors",
+          isActive
+            ? "text-orange-600 border-orange-600"
+            : "text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300"
+        )}
+        role="tab"
+        aria-selected={isActive}
+      >
+        <Icon size={16} />
+        <span>{title}</span>
+      </button>
+  );
 
   return (
     <div
@@ -485,55 +514,97 @@ const AIHelperModal: React.FC<{
                 <Sparkles className="h-6 w-6 text-orange-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-800">
-                {hasResult ? t.aiHelperModal.resultTitle : t.aiHelperModal.title}
+                {t.aiHelperModal.title}
             </h2>
+        </div>
+
+        <div className="border-b border-gray-200 mb-4">
+            <nav className="flex -mb-px" role="tablist">
+                <AITab title={t.aiHelperModal.tabs.coverLetter} icon={FileText} isActive={activeAiTab === 'coverLetter'} onClick={() => setActiveAiTab('coverLetter')} />
+                <AITab title={t.aiHelperModal.tabs.skillGap} icon={ListChecks} isActive={activeAiTab === 'skillGap'} onClick={() => setActiveAiTab('skillGap')} />
+            </nav>
         </div>
 
         {hasResult ? (
           <>
-            <div className="bg-gray-50 border rounded-lg p-4 my-4 overflow-y-auto flex-grow">
-              <pre className="text-gray-700 whitespace-pre-wrap font-sans text-base">{result}</pre>
-            </div>
+            {activeAiTab === 'coverLetter' && (
+              <div className="bg-gray-50 border rounded-lg p-4 my-4 overflow-y-auto flex-grow">
+                <pre className="text-gray-700 whitespace-pre-wrap font-sans text-base">{result}</pre>
+              </div>
+            )}
+            {activeAiTab === 'skillGap' && analysisResult && (
+                 <div className="bg-gray-50 border rounded-lg p-4 my-4 overflow-y-auto flex-grow">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                        <AlertTriangle className="text-red-500 flex-shrink-0" size={20} /> {t.aiHelperModal.skillGap.gapsTitle}
+                    </h3>
+                    <ul className="list-disc list-inside space-y-3 mb-6 pl-2">
+                        {analysisResult.skillGaps.map((gap, index) => (
+                            <li key={`gap-${index}`}>
+                                <strong className="text-gray-700">{gap.skill}:</strong>
+                                <span className="text-gray-600 ml-1">{gap.reason}</span>
+                            </li>
+                        ))}
+                         {analysisResult.skillGaps.length === 0 && <p className="text-gray-500 italic">{t.aiHelperModal.skillGap.noGapsFound}</p>}
+                    </ul>
+
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                        <Lightbulb className="text-green-500 flex-shrink-0" size={20} /> {t.aiHelperModal.skillGap.suggestionsTitle}
+                    </h3>
+                    <ul className="list-disc list-inside space-y-3 pl-2">
+                        {analysisResult.suggestions.map((suggestion, index) => (
+                            <li key={`sug-${index}`} className="text-gray-700">{suggestion}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
             <div className="flex flex-wrap gap-2 justify-end pt-4 border-t">
               <button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 text-green-700 font-semibold hover:bg-green-200 transition-colors">
                 {isCopied ? <Check size={16} /> : <Copy size={16} />}
                 {isCopied ? t.aiHelperModal.copiedButton : t.aiHelperModal.copyButton}
               </button>
-              <button onClick={() => downloadAsFile('cover_letter.txt', result, 'text/plain')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
-                <FileDown size={16} /> {t.aiHelperModal.downloadTxtButton}
-              </button>
-              <button onClick={() => downloadResultAsPdf(result)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
-                <FileDown size={16} /> {t.aiHelperModal.downloadPdfButton}
-              </button>
+              {activeAiTab === 'coverLetter' && (
+                  <>
+                    <button onClick={() => downloadAsFile('cover_letter.txt', result, 'text/plain')} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                      <FileDown size={16} /> {t.aiHelperModal.downloadTxtButton}
+                    </button>
+                    <button onClick={() => downloadResultAsPdf(result)} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+                      <FileDown size={16} /> {t.aiHelperModal.downloadPdfButton}
+                    </button>
+                  </>
+              )}
               <button onClick={onStartOver} className="px-4 py-2 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors">{t.aiHelperModal.startOverButton}</button>
             </div>
           </>
         ) : (
           <>
-            <p className="text-gray-600 mb-4">{t.aiHelperModal.description.replace('{category}', activeCategory.toLowerCase())}</p>
+            <p className="text-gray-600 mb-4">
+              {activeAiTab === 'coverLetter' 
+                ? t.aiHelperModal.coverLetter.description.replace('{category}', activeCategory.toLowerCase()) 
+                : t.aiHelperModal.skillGap.description.replace('{category}', activeCategory.toLowerCase())}
+            </p>
             <textarea
               value={jobDesc}
               onChange={(e) => setJobDesc(e.target.value)}
-              disabled={isGenerating}
+              disabled={isLoading}
               className="w-full flex-grow p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100"
               placeholder={t.aiHelperModal.jobDescriptionPlaceholder}
             />
-            {hasError && <p className="text-red-500 mt-2">{error}</p>}
+            {hasError && <p className="text-red-500 mt-2">{activeAiTab === 'coverLetter' ? error : analysisError}</p>}
             <div className="mt-6 flex justify-end">
               <button
-                onClick={() => onGenerate(jobDesc)}
-                disabled={isGenerating || !jobDesc.trim()}
+                onClick={() => activeAiTab === 'coverLetter' ? onGenerate(jobDesc) : onAnalyze(jobDesc)}
+                disabled={isLoading || !jobDesc.trim()}
                 className="px-6 py-2.5 rounded-lg bg-orange-600 text-white font-semibold hover:bg-orange-700 transition-colors disabled:bg-orange-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {isGenerating ? (
+                {isLoading ? (
                   <>
                     <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>{t.aiHelperModal.generatingButton}</span>
+                    <span>{activeAiTab === 'coverLetter' ? t.aiHelperModal.coverLetter.generatingButton : t.aiHelperModal.skillGap.analyzingButton}</span>
                   </>
-                ) : <span>{t.aiHelperModal.generateButton}</span>}
+                ) : <span>{activeAiTab === 'coverLetter' ? t.aiHelperModal.coverLetter.generateButton : t.aiHelperModal.skillGap.analyzeButton}</span>}
               </button>
             </div>
           </>
@@ -551,9 +622,17 @@ const App: React.FC = () => {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isDevModeModalOpen, setIsDevModeModalOpen] = useState(false);
   const [isAiHelperOpen, setIsAiHelperOpen] = useState(false);
+  
+  // State for Cover Letter Generation
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationResult, setGenerationResult] = useState('');
   const [generationError, setGenerationError] = useState('');
+
+  // State for Skill Gap Analysis
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<SkillGapAnalysisResult | null>(null);
+  const [analysisError, setAnalysisError] = useState('');
+  
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
     skills: false,
@@ -679,6 +758,12 @@ const App: React.FC = () => {
     }));
     return { summary, skills, experiences };
   }, [t, activeCategoryForText, displayedSkills, filteredExperiences]);
+  
+  const stringifiedExperienceForAI = useMemo(() => {
+    return resumeContextForAI.experiences.map(e => 
+        `Role: ${e.role} at ${e.company} (${e.duration})\nAchievements:\n- ${e.achievements.join('\n- ')}`
+    ).join('\n\n');
+  }, [resumeContextForAI.experiences]);
 
   const handleGenerateApplication = async (jobDescription: string) => {
     if (!jobDescription.trim() || !process.env.API_KEY) return;
@@ -688,20 +773,14 @@ const App: React.FC = () => {
 
     try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        
-        const stringifiedExperience = resumeContextForAI.experiences.map(e => 
-            `Role: ${e.role} at ${e.company} (${e.duration})\nAchievements:\n- ${e.achievements.join('\n- ')}`
-        ).join('\n\n');
-
         const systemInstruction = `You are a professional career coach and expert cover letter writer. Your task is to write a compelling, professional, and tailored cover letter for a job application. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
-
         const userPrompt = `
         My Resume Information:
         - Name: ${t.name}
         - Summary for this role type: ${resumeContextForAI.summary}
         - Relevant Skills: ${resumeContextForAI.skills.join(', ')}
         - Relevant Work Experience:
-        ${stringifiedExperience}
+        ${stringifiedExperienceForAI}
 
         Job Description to Apply For:
         ---
@@ -721,18 +800,86 @@ const App: React.FC = () => {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: userPrompt,
-            config: {
-                systemInstruction: systemInstruction,
-            }
+            config: { systemInstruction }
         });
 
         setGenerationResult(response.text);
 
     } catch (error) {
         console.error("Error generating application:", error);
-        setGenerationError(t.aiHelperModal.error);
+        setGenerationError(t.aiHelperModal.coverLetter.error);
     } finally {
         setIsGenerating(false);
+    }
+  };
+
+  const handleSkillGapAnalysis = async (jobDescription: string) => {
+    if (!jobDescription.trim() || !process.env.API_KEY) return;
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+    setAnalysisError('');
+
+    try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const systemInstruction = `You are an expert career advisor and resume analyst. Your task is to analyze a job description against a candidate's resume information. Identify skill gaps and areas where the candidate could improve to be a better fit for the role. Your response must be in ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'} and formatted as JSON.`;
+        const userPrompt = `
+        My Resume Information:
+        - Name: ${t.name}
+        - Summary for this role type: ${resumeContextForAI.summary}
+        - Relevant Skills: ${resumeContextForAI.skills.join(', ')}
+        - Relevant Work Experience:
+        ${stringifiedExperienceForAI}
+
+        Job Description to Analyze:
+        ---
+        ${jobDescription}
+        ---
+
+        Instructions:
+        1. Carefully compare the "Job Description" with "My Resume Information".
+        2. Identify key skills, technologies, or experiences required by the job that are missing or not strongly highlighted in my resume.
+        3. Generate a list of actionable suggestions for me to become a stronger candidate. These could include learning new skills, getting certifications, or reframing my existing experience.
+        4. The output must be a valid JSON object. Do not include any text or markdown formatting before or after the JSON object.
+        `;
+        
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: {
+                systemInstruction,
+                responseMimeType: "application/json",
+                responseSchema: {
+                    type: Type.OBJECT,
+                    properties: {
+                        skillGaps: {
+                            type: Type.ARRAY,
+                            description: "List of skills or experiences from the job description that are weakly represented in the resume.",
+                            items: {
+                                type: Type.OBJECT,
+                                properties: {
+                                    skill: { type: Type.STRING, description: "The specific skill or requirement from the job description." },
+                                    reason: { type: Type.STRING, description: "A brief explanation of why this is considered a gap based on the provided resume information." }
+                                }
+                            }
+                        },
+                        suggestions: {
+                            type: Type.ARRAY,
+                            description: "A list of actionable suggestions for improvement.",
+                            items: { type: Type.STRING }
+                        }
+                    }
+                }
+            }
+        });
+        
+        const parsedResult = JSON.parse(response.text);
+        setAnalysisResult(parsedResult);
+
+    } catch (error) {
+        console.error("Error analyzing skills:", error);
+        setAnalysisError(t.aiHelperModal.skillGap.error);
+    } finally {
+        setIsAnalyzing(false);
     }
   };
 
@@ -790,6 +937,13 @@ const App: React.FC = () => {
         setIsDownloadModalOpen(false);
       });
     }, 50);
+  };
+  
+  const handleAiStartOver = () => {
+    setGenerationResult('');
+    setGenerationError('');
+    setAnalysisResult(null);
+    setAnalysisError('');
   };
 
   return (
@@ -926,10 +1080,11 @@ const App: React.FC = () => {
         onGenerate={handleGenerateApplication}
         result={generationResult}
         error={generationError}
-        onStartOver={() => {
-            setGenerationResult('');
-            setGenerationError('');
-        }}
+        onStartOver={handleAiStartOver}
+        isAnalyzing={isAnalyzing}
+        onAnalyze={handleSkillGapAnalysis}
+        analysisResult={analysisResult}
+        analysisError={analysisError}
       />}
     </div>
   );
