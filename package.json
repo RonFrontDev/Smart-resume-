@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "A modern, single-page digital resume",
   "scripts": {
-    "build": "tsc && mkdir -p dist && cp index.html metadata.json dist/ && cp -r components data i18n lib dist/"
+    "build": "tsc && mkdir -p dist && cp index.html metadata.json dist/ && cp -r data i18n lib dist/"
   },
   "dependencies": {
     "@google/genai": "^1.15.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "typescript": "^5.9.2"
   },
   "devDependencies": {
