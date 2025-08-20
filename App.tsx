@@ -7,7 +7,7 @@ import type { AppTab, WorkExperience, Education, Reference, SkillGapAnalysisResu
 import { MailIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon } from './components/icons';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
 import { ToggleSwitch } from './components/ui/toggle-switch';
-import { cn } from './lib/utils';
+import { cn, callAIAssistant } from './lib/utils';
 import { translations } from './i18n';
 import { ALL_SKILLS, workData } from './data/content';
 
@@ -196,25 +196,16 @@ const App: React.FC = () => {
         7. The output must be ONLY the text of the cover letter, ready to be copied. Do not include extra commentary, titles like "Subject: Cover Letter", or markdown formatting.
         `;
         
-        const response = await fetch('/.netlify/functions/gemini-api', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'generateCoverLetter',
-                payload: { userPrompt, systemInstruction }
-            })
+        const resultText = await callAIAssistant('generateCoverLetter', {
+            userPrompt,
+            systemInstruction,
         });
         
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'API call failed');
-        }
-        
-        const data = await response.json();
-        setGenerationResult(data.result);
+        setGenerationResult(resultText);
 
     } catch (error) {
         console.error("Error generating application:", error);
-        setGenerationError(t.aiHelperModal.coverLetter.error);
+        setGenerationError(error instanceof Error ? error.message : t.aiHelperModal.coverLetter.error);
     } finally {
         setIsGenerating(false);
     }
@@ -249,26 +240,17 @@ const App: React.FC = () => {
         5. The output must be a valid JSON object. Do not include any text or markdown formatting before or after the JSON object.
         `;
         
-        const response = await fetch('/.netlify/functions/gemini-api', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'analyzeSkillGap',
-                payload: { userPrompt, systemInstruction }
-            })
+        const resultJsonString = await callAIAssistant('analyzeSkillGap', {
+            userPrompt,
+            systemInstruction
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'API call failed');
-        }
-
-        const data = await response.json();
-        const parsedResult = JSON.parse(data.result);
+        const parsedResult = JSON.parse(resultJsonString);
         setAnalysisResult(parsedResult);
 
     } catch (error) {
         console.error("Error analyzing skills:", error);
-        setAnalysisError(t.aiHelperModal.skillGap.error);
+        setAnalysisError(error instanceof Error ? error.message : t.aiHelperModal.skillGap.error);
     } finally {
         setIsAnalyzing(false);
     }
@@ -296,25 +278,16 @@ const App: React.FC = () => {
         3. The output must be ONLY the summary text. Do not include any extra commentary, titles, or markdown.
         `;
 
-        const response = await fetch('/.netlify/functions/gemini-api', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'generateSummary',
-                payload: { userPrompt, systemInstruction }
-            })
+        const summaryText = await callAIAssistant('generateSummary', {
+            userPrompt,
+            systemInstruction
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'API call failed');
-        }
-
-        const data = await response.json();
-        setAnalysisSummary(data.result);
+        setAnalysisSummary(summaryText);
 
     } catch (error) {
         console.error("Error generating summary:", error);
-        setSummaryError(t.aiHelperModal.skillGap.summaryError);
+        setSummaryError(error instanceof Error ? error.message : t.aiHelperModal.skillGap.summaryError);
     } finally {
         setIsSummarizing(false);
     }
