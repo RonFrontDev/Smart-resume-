@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "A modern, single-page digital resume",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && mkdir -p dist && cp index.html metadata.json dist/ && cp -r components data i18n lib dist/"
   },
   "dependencies": {
-    "@google/genai": "^1.15.0"
+    "@google/genai": "^1.15.0",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
     "@netlify/functions": "^4.2.2"
