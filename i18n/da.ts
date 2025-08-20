@@ -35,7 +35,8 @@ export const da = {
       collapseAll: "Fold alle sektioner sammen",
       unfoldAll: "Fold alle sektioner ud",
       download: "Download som PDF",
-      toggleDevelopmentMode: "Slå udviklingstilstand til/fra"
+      toggleDevelopmentMode: "Slå udviklingstilstand til/fra",
+      aiAssistant: "AI Ansøgningsassistent"
   },
   developmentNotice: "Dette CV er under udvikling. Oplysninger kan være ufuldstændige eller blive ændret.",
   downloadModal: {
@@ -53,6 +54,18 @@ export const da = {
     confirm: "Bekræft",
     cancel: "Annuller",
     error: "Forkert kode. Prøv venligst igen."
+  },
+  aiHelperModal: {
+    title: "AI Ansøgningsassistent",
+    subtitle: "Indsæt en jobbeskrivelse nedenfor for at analysere, hvordan dine kompetencer og erfaringer matcher rollen.",
+    placeholder: "Indsæt jobbeskrivelse her...",
+    button: "Analyser",
+    analyzing: "Analyserer...",
+    error: "Der opstod en fejl under analysen. Prøv venligst igen.",
+    resultsTitle: "Kompetencegab-analyse",
+    matchingSkills: "Matchende Kompetencer",
+    missingSkills: "Manglende Kompetencer",
+    suggestions: "Forslag til Forbedring"
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", education: "Uddannelse", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   education: {

@@ -38,3 +38,14 @@ export interface Education {
     location: string;
     degree: string;
 }
+
+export interface SkillGap {
+    skill: string;
+    reasoning: string;
+}
+
+export interface SkillGapAnalysisResult {
+    matchingSkills: SkillGap[];
+    missingSkills: SkillGap[];
+    suggestions: string[];
+}

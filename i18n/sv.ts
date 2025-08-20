@@ -35,7 +35,8 @@ export const sv = {
       collapseAll: "Fäll ihop alla sektioner",
       unfoldAll: "Fäll ut alla sektioner",
       download: "Ladda ner som PDF",
-      toggleDevelopmentMode: "Växla utvecklingsläge"
+      toggleDevelopmentMode: "Växla utvecklingsläge",
+      aiAssistant: "AI Applikationsassistent"
   },
   developmentNotice: "Detta CV är under utveckling. Information kan vara ofullständig eller kan komma att ändras.",
   downloadModal: {
@@ -53,6 +54,18 @@ export const sv = {
     confirm: "Bekräfta",
     cancel: "Avbryt",
     error: "Felaktig kod. Försök igen."
+  },
+  aiHelperModal: {
+    title: "AI Applikationsassistent",
+    subtitle: "Klistra in en jobbannons nedan för att analysera hur dina färdigheter och erfarenheter matchar rollen.",
+    placeholder: "Klistra in jobbannons här...",
+    button: "Analysera",
+    analyzing: "Analyserar...",
+    error: "Ett fel uppstod under analysen. Försök igen.",
+    resultsTitle: "Kompetensgapsanalys",
+    matchingSkills: "Matchande Färdigheter",
+    missingSkills: "Saknade Färdigheter",
+    suggestions: "Förslag till Förbättringar"
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", education: "Utbildning", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
   education: {

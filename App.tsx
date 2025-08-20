@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import html2pdf from 'html2pdf.js';
-import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, Sparkles } from 'lucide-react';
 
-import type { AppTab, WorkExperience, Education, Reference } from './types';
+import type { AppTab, WorkExperience, Education, Reference, Skill } from './types';
 import { MailIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon } from './components/icons';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
 import { ToggleSwitch } from './components/ui/toggle-switch';
@@ -19,6 +19,7 @@ import { ExperienceCard } from './components/ExperienceCard';
 import { ContactModal } from './components/ContactModal';
 import { DownloadConfirmationModal } from './components/DownloadConfirmationModal';
 import { DevModeModal } from './components/DevModeModal';
+import { AIHelperModal } from './components/AIHelperModal';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<keyof typeof translations>('en');
@@ -26,6 +27,7 @@ const App: React.FC = () => {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isDevModeModalOpen, setIsDevModeModalOpen] = useState(false);
+  const [isAIAssistantModalOpen, setIsAIAssistantModalOpen] = useState(false);
   
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
@@ -132,6 +134,24 @@ const App: React.FC = () => {
     return ALL_SKILLS.filter(skill => skill.category === activeTab);
   }, [activeTab]);
 
+  const currentResumeContentForAI = useMemo(() => {
+    const summary = t.summary[activeCategoryForText];
+    const skills = displayedSkills.map((s: Skill) => s.name).join(', ');
+    const experiences = filteredExperiences.map((exp: WorkExperience) => {
+        const achievements = [
+            ...exp.achievements.fitness,
+            ...exp.achievements.professional,
+        ].map(a => `- ${a}`).join('\n');
+        return `Role: ${exp.role} at ${exp.company}\nAchievements:\n${achievements}`;
+    }).join('\n\n');
+
+    return `
+        Summary: ${summary}\n
+        Skills: ${skills}\n
+        Experience:\n${experiences}
+    `;
+  }, [t, activeCategoryForText, displayedSkills, filteredExperiences]);
+
   const handleToggleCollapse = (sectionId: string) => {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
   };
@@ -198,6 +218,9 @@ const App: React.FC = () => {
         <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
         <ControlButton onClick={() => setIsContactModalOpen(true)} title={t.tooltips.viewContact}>
           <MailIcon />
+        </ControlButton>
+        <ControlButton onClick={() => setIsAIAssistantModalOpen(true)} title={t.tooltips.aiAssistant}>
+            <Sparkles size={18} />
         </ControlButton>
         <ControlButton onClick={() => setIsDownloadModalOpen(true)} title={t.tooltips.download} disabled={isDownloading}>
           <DownloadIcon />
@@ -309,6 +332,11 @@ const App: React.FC = () => {
         onClose={() => setIsDevModeModalOpen(false)}
         onConfirm={handleDevModeConfirm}
         isActivating={!developmentStatus[activeTab]}
+      />}
+      {isAIAssistantModalOpen && <AIHelperModal
+        t={t}
+        onClose={() => setIsAIAssistantModalOpen(false)}
+        resumeContent={currentResumeContentForAI}
       />}
     </div>
   );

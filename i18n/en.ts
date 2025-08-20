@@ -35,7 +35,8 @@ export const en = {
       collapseAll: "Collapse All Sections",
       unfoldAll: "Unfold All Sections",
       download: "Download as PDF",
-      toggleDevelopmentMode: "Toggle Development Mode"
+      toggleDevelopmentMode: "Toggle Development Mode",
+      aiAssistant: "AI Application Assistant"
   },
   developmentNotice: "This resume is currently under development. Information may be incomplete or subject to change.",
   downloadModal: {
@@ -53,6 +54,18 @@ export const en = {
     confirm: "Confirm",
     cancel: "Cancel",
     error: "Incorrect code. Please try again."
+  },
+  aiHelperModal: {
+    title: "AI Application Assistant",
+    subtitle: "Paste a job description below to analyze how your skills and experience match the role.",
+    placeholder: "Paste job description here...",
+    button: "Analyze",
+    analyzing: "Analyzing...",
+    error: "An error occurred during analysis. Please try again.",
+    resultsTitle: "Skill Gap Analysis",
+    matchingSkills: "Matching Skills",
+    missingSkills: "Missing Skills",
+    suggestions: "Suggestions for Improvement"
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   education: {
