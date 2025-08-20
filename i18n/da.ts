@@ -35,8 +35,7 @@ export const da = {
       collapseAll: "Fold alle sektioner sammen",
       unfoldAll: "Fold alle sektioner ud",
       download: "Download som PDF",
-      toggleDevelopmentMode: "Slå udviklingstilstand til/fra",
-      aiHelper: "AI Ansøgningsassistent"
+      toggleDevelopmentMode: "Slå udviklingstilstand til/fra"
   },
   developmentNotice: "Dette CV er under udvikling. Oplysninger kan være ufuldstændige eller blive ændret.",
   downloadModal: {
@@ -54,42 +53,6 @@ export const da = {
     confirm: "Bekræft",
     cancel: "Annuller",
     error: "Forkert kode. Prøv venligst igen."
-  },
-  aiHelperModal: {
-    title: "AI Ansøgningsassistent",
-    jobDescriptionPlaceholder: "Indsæt hele jobbeskrivelsen her...",
-    copyButton: "Kopier",
-    copiedButton: "Kopieret!",
-    downloadTxtButton: "Download .txt",
-    downloadPdfButton: "Download .pdf",
-    startOverButton: "Start forfra",
-    tabs: {
-      coverLetter: "Følgebrev",
-      skillGap: "Kompetenceanalyse"
-    },
-    coverLetter: {
-      description: "Indsæt en jobbeskrivelse nedenfor. AI'en vil analysere den op imod dit CV's '{category}' profil og generere et skræddersyet følgebrev.",
-      generateButton: "Generer Følgebrev",
-      generatingButton: "Genererer...",
-      error: "Der opstod en fejl under genereringen af ansøgningen. Prøv venligst igen.",
-      resultTitle: "Genereret Følgebrev",
-    },
-    skillGap: {
-      description: "Indsæt en jobbeskrivelse nedenfor. AI'en vil identificere potentielle kompetencegab baseret på din '{category}' profil og foreslå forbedringsområder.",
-      analyzeButton: "Analyser Mine Kompetencer",
-      analyzingButton: "Analyserer...",
-      error: "Der opstod en fejl under analysen. Prøv venligst igen.",
-      gapsTitle: "Potentielle Mangler",
-      suggestionsTitle: "Handlingsorienterede Forslag",
-      noGapsFound: "Ingen væsentlige mangler fundet baseret på de givne oplysninger. Din profil ser ud til at være et stærkt match!",
-      summaryTitle: "Opsummering",
-      generateSummaryButton: "Generer Opsummering",
-      generatingSummaryButton: "Opsummerer...",
-      summaryError: "Der opstod en fejl under generering af opsummeringen. Prøv venligst igen.",
-      downloadJsonButton: "Download .json",
-      matchScoreTitle: "Samlet Match Score",
-      matchScoreLabel: "Match"
-    }
   },
   sections: { summary: "Resumé", skills: "Kompetencer", experience: "Erfaring", education: "Uddannelse", references: "Referencer", achievements: { fitness: "Fitness Præstationer", professional: "Professionelle Præstationer" } },
   education: {

@@ -1,2 +1,0 @@
-import { jsx as _jsx } from "react/jsx-runtime";
-export const ControlButton = ({ onClick, title, disabled, children }) => (_jsx("button", { onClick: onClick, title: title, disabled: disabled, className: "flex items-center justify-center p-2 rounded-full text-gray-600 hover:text-gray-800 hover:bg-gray-100/70 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed", children: children }));

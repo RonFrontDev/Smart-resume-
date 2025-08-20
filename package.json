@@ -3,25 +3,22 @@
   "version": "1.0.0",
   "description": "A modern, single-page digital resume",
   "scripts": {
-    "build": "tsc && mkdir -p dist && cp index.html metadata.json dist/ && cp -r data i18n lib dist/"
+    "build": "tsc --outDir dist && cp index.html dist/",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@google/genai": "^1.15.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.23.12",
-    "lucide-react": "^0.540.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "tailwind-merge": "^3.3.1",
-    "typescript": "^5.9.2",
-    "usehooks-ts": "^3.1.1",
-    "vite": "^6.3.5"
+    "framer-motion": "^11.1.9",
+    "html2pdf.js": "^0.10.1",
+    "lucide-react": "^0.378.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.3.0",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
-    "@netlify/functions": "^4.2.2",
-    "@types/html2pdf.js": "^0.10.0",
-    "@types/node": "^24.3.0",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7"
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.0.0"
   }
 }

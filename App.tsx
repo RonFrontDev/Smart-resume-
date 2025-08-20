@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import html2pdf from 'html2pdf.js';
-import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, Sparkles } from 'lucide-react';
+import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle } from 'lucide-react';
 
-import type { AppTab, WorkExperience, Education, Reference, SkillGapAnalysisResult } from './types';
+import type { AppTab, WorkExperience, Education, Reference } from './types';
 import { MailIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon } from './components/icons';
 import { NavBar, NavItem } from './components/ui/tubelight-navbar';
 import { ToggleSwitch } from './components/ui/toggle-switch';
-import { cn, callAIAssistant } from './lib/utils';
+import { cn } from './lib/utils';
 import { translations } from './i18n';
 import { ALL_SKILLS, workData } from './data/content';
 
@@ -19,7 +19,6 @@ import { ExperienceCard } from './components/ExperienceCard';
 import { ContactModal } from './components/ContactModal';
 import { DownloadConfirmationModal } from './components/DownloadConfirmationModal';
 import { DevModeModal } from './components/DevModeModal';
-import { AIHelperModal } from './components/AIHelperModal';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<keyof typeof translations>('en');
@@ -27,20 +26,6 @@ const App: React.FC = () => {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isDevModeModalOpen, setIsDevModeModalOpen] = useState(false);
-  const [isAiHelperOpen, setIsAiHelperOpen] = useState(false);
-  
-  // State for Cover Letter Generation
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generationResult, setGenerationResult] = useState('');
-  const [generationError, setGenerationError] = useState('');
-
-  // State for Skill Gap Analysis
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<SkillGapAnalysisResult | null>(null);
-  const [analysisError, setAnalysisError] = useState('');
-  const [isSummarizing, setIsSummarizing] = useState(false);
-  const [analysisSummary, setAnalysisSummary] = useState('');
-  const [summaryError, setSummaryError] = useState('');
   
   const [collapsedSections, setCollapsedSections] = useState<{ [key: string]: boolean }>({
     summary: false,
@@ -147,186 +132,6 @@ const App: React.FC = () => {
     return ALL_SKILLS.filter(skill => skill.category === activeTab);
   }, [activeTab]);
 
-  const resumeContextForAI = useMemo(() => {
-    const summary = t.summary[activeCategoryForText];
-    const skills = displayedSkills.map(s => s.name);
-    const experiences = filteredExperiences.map(exp => ({
-        role: exp.role,
-        company: exp.company,
-        duration: exp.duration,
-        achievements: [...exp.achievements.fitness, ...exp.achievements.professional],
-    }));
-    return { summary, skills, experiences };
-  }, [t, activeCategoryForText, displayedSkills, filteredExperiences]);
-  
-  const stringifiedExperienceForAI = useMemo(() => {
-    return resumeContextForAI.experiences.map(e => 
-        `Role: ${e.role} at ${e.company} (${e.duration})\nAchievements:\n- ${e.achievements.join('\n- ')}`
-    ).join('\n\n');
-  }, [resumeContextForAI.experiences]);
-
-  const handleGenerateApplication = async (jobDescription: string) => {
-    if (!jobDescription.trim()) return;
-    setIsGenerating(true);
-    setGenerationResult('');
-    setGenerationError('');
-
-    try {
-        const systemInstruction = `You are a professional career coach and expert cover letter writer. Your task is to write a compelling, professional, and tailored cover letter for a job application. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
-        const userPrompt = `
-        My Resume Information:
-        - Name: ${t.name}
-        - Summary for this role type: ${resumeContextForAI.summary}
-        - Relevant Skills: ${resumeContextForAI.skills.join(', ')}
-        - Relevant Work Experience:
-        ${stringifiedExperienceForAI}
-
-        Job Description to Apply For:
-        ---
-        ${jobDescription}
-        ---
-
-        Instructions for the Cover Letter:
-        1. Write it from my perspective (${t.name}).
-        2. Address the key requirements from the job description.
-        3. Directly reference my skills and experiences from the resume info to show I am a strong match.
-        4. Use a professional and confident tone.
-        5. Structure it with an introduction, body paragraphs highlighting my fit, and a conclusion with a call to action.
-        6. Do not invent any skills or experiences not provided in my resume information.
-        7. The output must be ONLY the text of the cover letter, ready to be copied. Do not include extra commentary, titles like "Subject: Cover Letter", or markdown formatting.
-        `;
-        
-        const response = await callAIAssistant({
-            model: 'gemini-2.5-flash',
-            contents: userPrompt,
-            config: { systemInstruction }
-        });
-        
-        setGenerationResult(response.text);
-
-    } catch (error) {
-        console.error("Error generating application:", error);
-        setGenerationError(error instanceof Error ? error.message : t.aiHelperModal.coverLetter.error);
-    } finally {
-        setIsGenerating(false);
-    }
-  };
-
-  const handleSkillGapAnalysis = async (jobDescription: string) => {
-    if (!jobDescription.trim()) return;
-    setIsAnalyzing(true);
-    setAnalysisResult(null);
-    setAnalysisError('');
-
-    try {
-        const systemInstruction = `You are an expert career advisor and resume analyst. Your task is to analyze a job description against a candidate's resume information. Identify skill gaps and areas where the candidate could improve to be a better fit for the role. Your response must be in ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'} and formatted as JSON.`;
-        const userPrompt = `
-        My Resume Information:
-        - Name: ${t.name}
-        - Summary for this role type: ${resumeContextForAI.summary}
-        - Relevant Skills: ${resumeContextForAI.skills.join(', ')}
-        - Relevant Work Experience:
-        ${stringifiedExperienceForAI}
-
-        Job Description to Analyze:
-        ---
-        ${jobDescription}
-        ---
-
-        Instructions:
-        1. Carefully compare the "Job Description" with "My Resume Information".
-        2. Identify key skills, technologies, or experiences required by the job that are missing or not strongly highlighted in my resume.
-        3. Generate a list of actionable suggestions for me to become a stronger candidate. These could include learning new skills, getting certifications, or reframing my existing experience.
-        4. Calculate an overall 'matchPercentage' from 0 to 100, where 100 is a perfect match. Base this on how well my skills and experience align with the job requirements.
-        5. The output must be a valid JSON object. Do not include any text or markdown formatting before or after the JSON object.
-        `;
-        
-        const responseSchema = {
-            type: "OBJECT",
-            properties: {
-                skillGaps: {
-                    type: "ARRAY",
-                    description: "List of skills or experiences from the job description that are weakly represented in the resume.",
-                    items: {
-                        type: "OBJECT",
-                        properties: {
-                            skill: { type: "STRING", description: "The specific skill or requirement from the job description." },
-                            reason: { type: "STRING", description: "A brief explanation of why this is considered a gap based on the provided resume information." }
-                        }
-                    }
-                },
-                suggestions: {
-                    type: "ARRAY",
-                    description: "A list of actionable suggestions for improvement.",
-                    items: { type: "STRING" }
-                },
-                matchPercentage: {
-                    type: "NUMBER",
-                    description: "An estimated percentage (0-100) of how well the resume matches the job description."
-                }
-            }
-        };
-
-        const response = await callAIAssistant({
-            model: 'gemini-2.5-flash',
-            contents: userPrompt,
-            config: {
-                systemInstruction,
-                responseMimeType: "application/json",
-                responseSchema,
-            }
-        });
-
-        const parsedResult = JSON.parse(response.text);
-        setAnalysisResult(parsedResult);
-
-    } catch (error) {
-        console.error("Error analyzing skills:", error);
-        setAnalysisError(error instanceof Error ? error.message : t.aiHelperModal.skillGap.error);
-    } finally {
-        setIsAnalyzing(false);
-    }
-  };
-
-  const handleGenerateSummary = async () => {
-    if (!analysisResult) return;
-    setIsSummarizing(true);
-    setAnalysisSummary('');
-    setSummaryError('');
-
-    try {
-        const systemInstruction = `You are a helpful career coach. Your task is to provide a brief, encouraging summary of a skill gap analysis for a job candidate. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
-        const userPrompt = `
-        Based on the following skill gap analysis JSON, write a short, encouraging summary (2-3 sentences) for the job candidate. Briefly mention the key areas to focus on without being negative.
-
-        Analysis JSON:
-        ---
-        ${JSON.stringify(analysisResult, null, 2)}
-        ---
-
-        Instructions:
-        1. Keep the tone positive and motivational.
-        2. Summarize the main takeaways from the analysis.
-        3. The output must be ONLY the summary text. Do not include any extra commentary, titles, or markdown.
-        `;
-
-        const response = await callAIAssistant({
-            model: 'gemini-2.5-flash',
-            contents: userPrompt,
-            config: { systemInstruction }
-        });
-
-        setAnalysisSummary(response.text);
-
-    } catch (error) {
-        console.error("Error generating summary:", error);
-        setSummaryError(error instanceof Error ? error.message : t.aiHelperModal.skillGap.summaryError);
-    } finally {
-        setIsSummarizing(false);
-    }
-  };
-
-
   const handleToggleCollapse = (sectionId: string) => {
     setCollapsedSections(prev => ({ ...prev, [sectionId]: !prev[sectionId] }));
   };
@@ -381,15 +186,6 @@ const App: React.FC = () => {
       });
     }, 50);
   };
-  
-  const handleAiStartOver = () => {
-    setGenerationResult('');
-    setGenerationError('');
-    setAnalysisResult(null);
-    setAnalysisError('');
-    setAnalysisSummary('');
-    setSummaryError('');
-  };
 
   return (
     <div className="relative z-0">
@@ -400,9 +196,6 @@ const App: React.FC = () => {
       />
       <NavBar items={navItems} activeTab={activeTab} onTabChange={handleTabChange}>
         <LanguageSwitcher currentLang={language} onSelectLang={setLanguage} />
-        <ControlButton onClick={() => setIsAiHelperOpen(true)} title={t.tooltips.aiHelper}>
-            <Sparkles />
-        </ControlButton>
         <ControlButton onClick={() => setIsContactModalOpen(true)} title={t.tooltips.viewContact}>
           <MailIcon />
         </ControlButton>
@@ -516,24 +309,6 @@ const App: React.FC = () => {
         onClose={() => setIsDevModeModalOpen(false)}
         onConfirm={handleDevModeConfirm}
         isActivating={!developmentStatus[activeTab]}
-      />}
-      {isAiHelperOpen && <AIHelperModal
-        t={t}
-        onClose={() => setIsAiHelperOpen(false)}
-        activeCategory={t.tabs[activeCategoryForText as keyof typeof t.tabs] || t.tabs.full}
-        isGenerating={isGenerating}
-        onGenerate={handleGenerateApplication}
-        result={generationResult}
-        error={generationError}
-        onStartOver={handleAiStartOver}
-        isAnalyzing={isAnalyzing}
-        onAnalyze={handleSkillGapAnalysis}
-        analysisResult={analysisResult}
-        analysisError={analysisError}
-        isSummarizing={isSummarizing}
-        onGenerateSummary={handleGenerateSummary}
-        analysisSummary={analysisSummary}
-        summaryError={summaryError}
       />}
     </div>
   );

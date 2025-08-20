@@ -35,8 +35,7 @@ export const sv = {
       collapseAll: "Fäll ihop alla sektioner",
       unfoldAll: "Fäll ut alla sektioner",
       download: "Ladda ner som PDF",
-      toggleDevelopmentMode: "Växla utvecklingsläge",
-      aiHelper: "AI Ansökningsassistent"
+      toggleDevelopmentMode: "Växla utvecklingsläge"
   },
   developmentNotice: "Detta CV är under utveckling. Information kan vara ofullständig eller kan komma att ändras.",
   downloadModal: {
@@ -54,42 +53,6 @@ export const sv = {
     confirm: "Bekräfta",
     cancel: "Avbryt",
     error: "Felaktig kod. Försök igen."
-  },
-  aiHelperModal: {
-    title: "AI Ansökningsassistent",
-    jobDescriptionPlaceholder: "Klistra in hela jobbannonsen här...",
-    copyButton: "Kopiera",
-    copiedButton: "Kopierat!",
-    downloadTxtButton: "Ladda ner .txt",
-    downloadPdfButton: "Ladda ner .pdf",
-    startOverButton: "Börja om",
-    tabs: {
-      coverLetter: "Personligt Brev",
-      skillGap: "Kompetensanalys"
-    },
-    coverLetter: {
-      description: "Klistra in en jobbannons nedan. AI:n kommer att analysera den mot din CV:s '{category}'-profil och generera ett skräddarsytt personligt brev.",
-      generateButton: "Generera personligt brev",
-      generatingButton: "Genererar...",
-      error: "Ett fel uppstod när ansökan genererades. Var god försök igen.",
-      resultTitle: "Genererat personligt brev",
-    },
-    skillGap: {
-      description: "Klistra in en jobbannons nedan. AI:n kommer att identifiera potentiella kompetensluckor baserat på din '{category}'-profil och föreslå förbättringsområden.",
-      analyzeButton: "Analysera Mina Kompetenser",
-      analyzingButton: "Analyserar...",
-      error: "Ett fel uppstod under analysen. Försök igen.",
-      gapsTitle: "Potentiella Luckor",
-      suggestionsTitle: "Handlingsbara Förslag",
-      noGapsFound: "Inga betydande luckor hittades baserat på den angivna informationen. Din profil verkar vara en stark matchning!",
-      summaryTitle: "Sammanfattning",
-      generateSummaryButton: "Generera Sammanfattning",
-      generatingSummaryButton: "Sammanfattar...",
-      summaryError: "Ett fel uppstod när sammanfattningen genererades. Försök igen.",
-      downloadJsonButton: "Ladda ner .json",
-      matchScoreTitle: "Total Matchningspoäng",
-      matchScoreLabel: "Matchning"
-    }
   },
   sections: { summary: "Sammanfattning", skills: "Kompetenser", experience: "Erfarenhet", education: "Utbildning", references: "Referenser", achievements: { fitness: "Fitnessprestationer", professional: "Professionella Prestationer" } },
   education: {

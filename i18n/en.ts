@@ -35,8 +35,7 @@ export const en = {
       collapseAll: "Collapse All Sections",
       unfoldAll: "Unfold All Sections",
       download: "Download as PDF",
-      toggleDevelopmentMode: "Toggle Development Mode",
-      aiHelper: "AI Application Assistant"
+      toggleDevelopmentMode: "Toggle Development Mode"
   },
   developmentNotice: "This resume is currently under development. Information may be incomplete or subject to change.",
   downloadModal: {
@@ -54,42 +53,6 @@ export const en = {
     confirm: "Confirm",
     cancel: "Cancel",
     error: "Incorrect code. Please try again."
-  },
-  aiHelperModal: {
-    title: "AI Application Assistant",
-    jobDescriptionPlaceholder: "Paste the full job description here...",
-    copyButton: "Copy",
-    copiedButton: "Copied!",
-    downloadTxtButton: "Download .txt",
-    downloadPdfButton: "Download .pdf",
-    startOverButton: "Start Over",
-    tabs: {
-      coverLetter: "Cover Letter",
-      skillGap: "Skill Gap Analysis"
-    },
-    coverLetter: {
-      description: "Paste a job description below. The AI will analyze it against your resume's '{category}' profile and generate a tailored cover letter.",
-      generateButton: "Generate Cover Letter",
-      generatingButton: "Generating...",
-      error: "An error occurred while generating the application. Please try again.",
-      resultTitle: "Generated Cover Letter",
-    },
-    skillGap: {
-      description: "Paste a job description below. The AI will identify potential skill gaps based on your '{category}' profile and suggest areas for improvement.",
-      analyzeButton: "Analyze My Skills",
-      analyzingButton: "Analyzing...",
-      error: "An error occurred while analyzing. Please try again.",
-      gapsTitle: "Potential Gaps",
-      suggestionsTitle: "Actionable Suggestions",
-      noGapsFound: "No significant gaps were found based on the provided information. Your profile seems to be a strong match!",
-      summaryTitle: "Summary",
-      generateSummaryButton: "Generate Summary",
-      generatingSummaryButton: "Summarizing...",
-      summaryError: "An error occurred while generating the summary. Please try again.",
-      downloadJsonButton: "Download .json",
-      matchScoreTitle: "Overall Match Score",
-      matchScoreLabel: "Match"
-    }
   },
   sections: { summary: "Summary", skills: "Skills", experience: "Experience", education: "Education", references: "References", achievements: { fitness: "Fitness Achievements", professional: "Professional Achievements" } },
   education: {
