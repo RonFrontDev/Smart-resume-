@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import * as React from "react";
@@ -23,7 +24,7 @@ type TabItem = Tab | Separator;
 interface ExpandableTabsProps {
   tabs: TabItem[];
   selectedIndex: number | null;
-  onSelect: (index: number) => void;
+  onSelect: (index: number | null) => void;
   className?: string;
   activeColor?: string;
 }
@@ -54,17 +55,17 @@ export function ExpandableTabs({
   selectedIndex,
   onSelect,
   className,
-  activeColor = "text-primary",
+  activeColor = "text-orange-600",
 }: ExpandableTabsProps) {
 
   const Separator = () => (
-    <div className="mx-1 h-[24px] w-[1.2px] bg-border" aria-hidden="true" />
+    <div className="mx-1 h-[24px] w-[1.2px] bg-gray-200" aria-hidden="true" />
   );
 
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-2xl border bg-background p-1 shadow-sm",
+        "flex flex-wrap items-center gap-2 rounded-2xl border bg-white p-1 shadow-sm",
         className
       )}
     >
