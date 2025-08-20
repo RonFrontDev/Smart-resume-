@@ -1,0 +1,15 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { motion } from "framer-motion";
+import { cn } from "../../lib/utils";
+export function NavBar({ items, className, activeTab, onTabChange, children }) {
+    return (_jsx("div", { className: cn("fixed bottom-4 sm:top-4 left-1/2 -translate-x-1/2 z-50 no-print", className), children: _jsxs("nav", { "aria-label": "Main navigation", className: cn("flex flex-col sm:flex-row items-center gap-2 bg-white/60 border border-gray-200/80 backdrop-blur-lg p-2 sm:p-1 rounded-2xl sm:rounded-full shadow-lg"), children: [_jsx("div", { className: "flex items-center gap-2", role: "group", "aria-label": "Resume sections", children: items.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = activeTab === item.name;
+                        const colors = item.colorClasses;
+                        return (_jsxs("button", { onClick: () => onTabChange(item.name), className: cn("relative flex items-center justify-center gap-2 cursor-pointer text-sm font-semibold px-4 py-2 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2", isActive ? colors.text : "text-gray-600 hover:text-gray-800 hover:bg-gray-100/70", isActive ? colors.ring : "focus-visible:ring-gray-400"), "aria-pressed": isActive, children: [_jsx(Icon, { size: 18, strokeWidth: 2 }), _jsx("span", { className: "hidden md:inline", children: item.title }), isActive && (_jsx(motion.div, { layoutId: "lamp", className: cn("absolute inset-0 w-full rounded-full -z-10", colors.bg), initial: false, transition: {
+                                        type: "spring",
+                                        stiffness: 300,
+                                        damping: 30,
+                                    }, children: _jsxs("div", { className: cn("absolute -top-1.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-t-full", colors.lamp), children: [_jsx("div", { className: cn("absolute w-12 h-6 rounded-full blur-md -top-2 -left-2", colors.glow) }), _jsx("div", { className: cn("absolute w-8 h-6 rounded-full blur-md -top-1", colors.glow) }), _jsx("div", { className: cn("absolute w-4 h-4 rounded-full blur-sm top-0 left-2", colors.glow) })] }) }))] }, item.name));
+                    }) }), _jsx("div", { className: "hidden sm:block h-6 w-px bg-gray-300" }), _jsx("div", { className: "flex items-center gap-2", role: "group", "aria-label": "Controls", children: children })] }) }));
+}

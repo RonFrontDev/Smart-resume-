@@ -7,9 +7,15 @@
   },
   "dependencies": {
     "@google/genai": "^1.15.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.540.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "typescript": "^5.9.2"
+    "tailwind-merge": "^3.3.1",
+    "typescript": "^5.9.2",
+    "usehooks-ts": "^3.1.1",
+    "vite": "^6.3.5"
   },
   "devDependencies": {
     "@netlify/functions": "^4.2.2",
