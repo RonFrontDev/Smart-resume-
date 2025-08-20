@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import html2pdf from 'html2pdf.js';
 import { FileText, Dumbbell, Briefcase, Users, Cpu, Camera, AlertTriangle, Sparkles } from 'lucide-react';
+import { GoogleGenAI, Type } from '@google/genai';
 
 import type { AppTab, WorkExperience, Education, Reference, SkillGapAnalysisResult } from './types';
 import { MailIcon, DownloadIcon, ChevronDoubleUpIcon, ChevronDoubleDownIcon } from './components/icons';
@@ -172,6 +173,7 @@ const App: React.FC = () => {
     setGenerationError('');
 
     try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
         const systemInstruction = `You are a professional career coach and expert cover letter writer. Your task is to write a compelling, professional, and tailored cover letter for a job application. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
         const userPrompt = `
         My Resume Information:
@@ -196,21 +198,13 @@ const App: React.FC = () => {
         7. The output must be ONLY the text of the cover letter, ready to be copied. Do not include extra commentary, titles like "Subject: Cover Letter", or markdown formatting.
         `;
         
-        const response = await fetch('/.netlify/functions/gemini-api', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'generateCoverLetter',
-                payload: { userPrompt, systemInstruction }
-            })
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: { systemInstruction }
         });
         
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'API call failed');
-        }
-        
-        const data = await response.json();
-        setGenerationResult(data.result);
+        setGenerationResult(response.text);
 
     } catch (error) {
         console.error("Error generating application:", error);
@@ -227,6 +221,7 @@ const App: React.FC = () => {
     setAnalysisError('');
 
     try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
         const systemInstruction = `You are an expert career advisor and resume analyst. Your task is to analyze a job description against a candidate's resume information. Identify skill gaps and areas where the candidate could improve to be a better fit for the role. Your response must be in ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'} and formatted as JSON.`;
         const userPrompt = `
         My Resume Information:
@@ -249,21 +244,41 @@ const App: React.FC = () => {
         5. The output must be a valid JSON object. Do not include any text or markdown formatting before or after the JSON object.
         `;
         
-        const response = await fetch('/.netlify/functions/gemini-api', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'analyzeSkillGap',
-                payload: { userPrompt, systemInstruction }
-            })
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: {
+                systemInstruction,
+                responseMimeType: "application/json",
+                responseSchema: {
+                    type: Type.OBJECT,
+                    properties: {
+                        skillGaps: {
+                            type: Type.ARRAY,
+                            description: "List of skills or experiences from the job description that are weakly represented in the resume.",
+                            items: {
+                                type: Type.OBJECT,
+                                properties: {
+                                    skill: { type: Type.STRING, description: "The specific skill or requirement from the job description." },
+                                    reason: { type: Type.STRING, description: "A brief explanation of why this is considered a gap based on the provided resume information." }
+                                }
+                            }
+                        },
+                        suggestions: {
+                            type: Type.ARRAY,
+                            description: "A list of actionable suggestions for improvement.",
+                            items: { type: Type.STRING }
+                        },
+                        matchPercentage: {
+                            type: Type.NUMBER,
+                            description: "An estimated percentage (0-100) of how well the resume matches the job description."
+                        }
+                    }
+                }
+            }
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'API call failed');
-        }
-
-        const data = await response.json();
-        const parsedResult = JSON.parse(data.result);
+        const parsedResult = JSON.parse(response.text);
         setAnalysisResult(parsedResult);
 
     } catch (error) {
@@ -281,6 +296,7 @@ const App: React.FC = () => {
     setSummaryError('');
 
     try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
         const systemInstruction = `You are a helpful career coach. Your task is to provide a brief, encouraging summary of a skill gap analysis for a job candidate. The response language must be ${language === 'en' ? 'English' : language === 'da' ? 'Danish' : 'Swedish'}.`;
         const userPrompt = `
         Based on the following skill gap analysis JSON, write a short, encouraging summary (2-3 sentences) for the job candidate. Briefly mention the key areas to focus on without being negative.
@@ -296,21 +312,13 @@ const App: React.FC = () => {
         3. The output must be ONLY the summary text. Do not include any extra commentary, titles, or markdown.
         `;
 
-        const response = await fetch('/.netlify/functions/gemini-api', {
-            method: 'POST',
-            body: JSON.stringify({
-                action: 'generateSummary',
-                payload: { userPrompt, systemInstruction }
-            })
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: { systemInstruction }
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'API call failed');
-        }
-
-        const data = await response.json();
-        setAnalysisSummary(data.result);
+        setAnalysisSummary(response.text);
 
     } catch (error) {
         console.error("Error generating summary:", error);
