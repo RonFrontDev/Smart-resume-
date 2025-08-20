@@ -1,29 +1,14 @@
 {
-  "name": "ronny-christensen's-resume",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "digital-resume",
+  "version": "1.0.0",
+  "description": "A modern, single-page digital resume",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-simple-maps": "3.0.0",
-    "html2pdf.js": "0.10.1",
-    "framer-motion": "11.1.9",
-    "lucide-react": "0.378.0",
-    "usehooks-ts": "3.1.0",
-    "clsx": "2.1.1",
-    "tailwind-merge": "2.3.0",
-    "@google/genai": "^1.15.0",
-    "@netlify/functions": "^4.2.2"
+    "@google/genai": "^1.15.0"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "@netlify/functions": "^4.2.2"
   }
 }
